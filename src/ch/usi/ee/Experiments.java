@@ -4,14 +4,46 @@ import ch.usi.ee.BubbleSort.BubbleSortPassPerItem;
 import ch.usi.ee.BubbleSort.BubbleSortUntilNoChange;
 import ch.usi.ee.BubbleSort.BubbleSortWhileNeeded;
 import ch.usi.ee.BubbleSort.Sorter;
+import ch.usi.ee.io.FileReaders;
 
 import java.util.*;
 
-public class Experiments {
+import static ch.usi.ee.enums.DataOrdering.*;
+
+
+public class Experiments extends FileReaders {
+    public int numberOfAlgorithms = 3;
+    public int iterationsPerDataType = 4;
+    public int iterationsPerDataSize[] = {10, 100, 1000, 10000};
+    public int dataOrderings = 3;
+
+    // These are the accumulators of the results for every experiment per data type
+    public Result integers[] = new Result[numberOfAlgorithms * iterationsPerDataType * iterationsPerDataSize.length * dataOrderings];
+    public Result shorts[] = new Result[numberOfAlgorithms * iterationsPerDataType * iterationsPerDataSize.length * dataOrderings];
+    public Result floats[] = new Result[numberOfAlgorithms * iterationsPerDataType * iterationsPerDataSize.length * dataOrderings];
+    public Result strings[] = new Result[numberOfAlgorithms * iterationsPerDataType * iterationsPerDataSize.length * dataOrderings];
+
     public static int total = 10000; //we change this size each time we run each code (1,10,100,1000,10000)
     //public static int total = (int) Math.pow(2,10); // Before overflow
 
+
     public static void main(String[] args) {
+        int sortedIntegersList[] = readIntegersFile(SORTED);
+        short sortedShortsList[] = readShortsFile(SORTED);
+        float sortedFloatsList[] = readFloatsFile(SORTED);
+        String sortedStringsList[] = readStringsFile(SORTED);
+
+        int reverseSortedIntegersList[] = readIntegersFile(REVERSED);
+        short reverseSortedShortsList[] = readShortsFile(REVERSED);
+        float reverseSortedFloatsList[] = readFloatsFile(REVERSED);
+        String reverseSortedStringsList[] = readStringsFile(REVERSED);
+
+        int randomIntegersList[] = readIntegersFile(RANDOM);
+        short randomShortsList[] = readShortsFile(RANDOM);
+        float randomFloatsList[] = readFloatsFile(RANDOM);
+        String randomStringsList[] = readStringsFile(RANDOM);
+
+
 
         for (int i = 0; i < 1000; i++) {
             //Integer[] array = sortedArray(total);
