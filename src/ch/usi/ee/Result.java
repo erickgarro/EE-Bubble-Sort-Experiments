@@ -23,6 +23,14 @@ public class Result {
         this.elapsedTime = new Stack<>();
     }
 
+    /**
+     * @param _arraySize     Size of the array
+     * @param _iterations    Number of iterations
+     * @param _lastNResults  Number of last results to consider
+     * @param _algorithmName Name of the algorithm
+     * @param _dataType      Name of the data type
+     * @param _dataOrdering  Name of the data ordering
+     */
     public Result(int _arraySize, int _iterations, int _lastNResults, Algorithm _algorithmName, DataType _dataType, DataOrdering _dataOrdering) {
         if (_lastNResults > _iterations) {
             throw new IllegalArgumentException("Number of elapsedTime cannot be greater than number of iterations");
@@ -35,35 +43,6 @@ public class Result {
             this.dataOrdering = _dataOrdering;
             elapsedTime = new Stack<>();
         }
-    }
-
-    // Getters
-    public Algorithm getAlgorithm() {
-        return algorithm;
-    }
-
-    public DataType getDataType() {
-        return dataType;
-    }
-
-    public DataOrdering getDataOrdering() {
-        return dataOrdering;
-    }
-
-    public int getArraySize() {
-        return arraySize;
-    }
-
-    public int getIterations() {
-        return iterations;
-    }
-
-    public int getLastNResults() {
-        return lastNResults;
-    }
-
-    public Stack<Long> getElapsedTime() {
-        return elapsedTime;
     }
 
     // Setters
@@ -95,23 +74,74 @@ public class Result {
         elapsedTime.push(_elapsedTime);
     }
 
-    // Get first result of the experiment
+    // Getters
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public DataType getDataType() {
+        return dataType;
+    }
+
+    public DataOrdering getDataOrdering() {
+        return dataOrdering;
+    }
+
+    public int getArraySize() {
+        return arraySize;
+    }
+
+    public int getIterations() {
+        return iterations;
+    }
+
+    public int getLastNResults() {
+        return lastNResults;
+    }
+
+    public Stack<Long> getElapsedTime() {
+        return elapsedTime;
+    }
+
+    /**
+     * Get the first result of the experiment
+     * @return First result of the experiment
+     */
     public long getFirstResult() {
+        if (elapsedTime.size() == 0) {
+            throw new IllegalArgumentException("There are no results");
+        }
+
         return elapsedTime.get(0);
     }
 
-    // Get elapsed time of the experiment (set during instantiation)
+    /**
+     * Get the elapsed time of the experiment (set during instantiation)
+     *
+     * @return Elapsed time of the experiment
+     * @throws IllegalArgumentException if there are no experiments recorded
+     */
+
     public long getLastResult() {
+        if (elapsedTime.size() == 0) {
+            throw new IllegalArgumentException("There are no results");
+        }
+
         return elapsedTime.get(elapsedTime.size() - 1);
     }
 
-    // Get average elapsed times of the last n results of the experiment
+    /**
+     * Get the average elapsed time of the last n results of the experiment
+     * @param n Number of last results to consider
+     * @return Average elapsed time of the last n results of the experiment
+     */
     public double getAverageLastN(int n) {
         double sum = 0;
 
         for (int i = elapsedTime.size() - lastNResults; i < elapsedTime.size(); i++) {
             sum += elapsedTime.get(i);
         }
+
         return sum / elapsedTime.size();
     }
 }
