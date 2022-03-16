@@ -35,20 +35,39 @@ public class Experiments extends FileReader {
         Stack<Result> shortsResults = new Stack<>();
         Stack<Result> floatsResults = new Stack<>();
         Stack<Result> stringsResults = new Stack<>();
+        Stack<Result> results;
 
         for (DataType type : dataTypes) {
-            for (int i = 0; i < arraySizes.length; i++) {
-                for (DataOrdering ordering : dataOrderings) {
-                    for (Sorter sorter : sorters) {
-                        fileReader = new FileReader();
-                        Comparable[] data = fileReader.readData(type, ordering, arraySizes[i]);
+            if (type == INTEGERS) {
+                results = integersResults;
+            } else if (type == SHORTS) {
+                results = shortsResults;
+            } else if (type == FLOATS) {
+                results = floatsResults;
+            } else {
+                results = stringsResults;
+            }
 
-                        for (int j = 0; j < totalIterations; j++) {
-                            long startTime = System.nanoTime();
-                            sorter.sort(data);
-                            long endTime = System.nanoTime();
-                            long elapsedTime = endTime - startTime;
+            for (DataOrdering ordering : dataOrderings) {
+                for (Sorter sorter : sorters) {
+                    fileReader = new FileReader();
+
+                    for(int i = 0; i < arraySizes.length; i++) {
+                        Result result = new Result(type, ordering, sorter.getClass().getName(), arraySizes[i], totalIterations);
+
+                        for (int j = 0; j < arraySizes.length; j++) {
+                            Comparable[] data = fileReader.readData(type, ordering, arraySizes[i]);
+
+                            for (int k = 0; k < totalIterations; k++) {
+                                long startTime = System.nanoTime();
+                                sorter.sort(data);
+                                long endTime = System.nanoTime();
+                                long elapsedTime = endTime - startTime;
+
+                                result.addElapsedTime(elapsedTime);
+                            }
                         }
+                        results.push(result);
                     }
                 }
             }

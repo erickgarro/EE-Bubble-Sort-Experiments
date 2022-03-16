@@ -5,7 +5,7 @@ import ch.usi.ee.enums.*;
 import java.util.Stack;
 
 public class Result {
-    private Algorithm algorithm;
+    private String algorithm;
     private DataType dataType;
     private DataOrdering dataOrdering;
     private int arraySize;
@@ -31,7 +31,7 @@ public class Result {
      * @param _dataType      Name of the data type
      * @param _dataOrdering  Name of the data ordering
      */
-    public Result(int _arraySize, int _iterations, int _lastNResults, Algorithm _algorithmName, DataType _dataType, DataOrdering _dataOrdering) {
+    public Result(int _arraySize, int _iterations, int _lastNResults, String _algorithmName, DataType _dataType, DataOrdering _dataOrdering) {
         if (_lastNResults > _iterations) {
             throw new IllegalArgumentException("Number of elapsedTime cannot be greater than number of iterations");
         } else {
@@ -44,9 +44,17 @@ public class Result {
             elapsedTime = new Stack<>();
         }
     }
+    public Result(DataType _type, DataOrdering _ordering, String _algorithmName, int arraySize, int totalIterations) {
+        this.dataType = _type;
+        this.dataOrdering = _ordering;
+        this.algorithm = _algorithmName;
+        this.arraySize = arraySize;
+        this.iterations = totalIterations;
+        this.elapsedTime = new Stack<>();
+    }
 
     // Setters
-    public void setAlgorithm(Algorithm _algorithm) {
+    public void setAlgorithm(String _algorithm) {
         algorithm = _algorithm;
     }
 
@@ -75,7 +83,7 @@ public class Result {
     }
 
     // Getters
-    public Algorithm getAlgorithm() {
+    public String getAlgorithm() {
         return algorithm;
     }
 
