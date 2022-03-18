@@ -70,8 +70,14 @@ public class FileReader {
         }
         reader.close();
 
-        System.out.println("Words filtered: " + words.size());
-        System.out.println("Length of words: " + stringLength);
+        System.out.println("Strings filtered: " + words.size());
+        System.out.println("Length of strings: " + stringLength);
+
+        if(words.size() == 0) {
+        	System.out.println("No strings with length " + stringLength + " were found.");
+        	System.out.println("Try again with a different length.");
+            System.exit(1);
+        }
 
         return words;
     }
@@ -85,13 +91,13 @@ public class FileReader {
      */
     private static <T> Class<T> getClass(DataType dataType) {
         switch (dataType) {
-            case INTEGERS:
+            case INTEGER:
                 return (Class<T>) int[].class;
-            case FLOATS:
+            case FLOAT:
                 return (Class<T>) float[].class;
-            case SHORTS:
+            case SHORT:
                 return (Class<T>) short[].class;
-            case STRINGS:
+            case STRING:
                 return (Class<T>) String[].class;
             default:
                 throw new IllegalArgumentException("Unknown data type");

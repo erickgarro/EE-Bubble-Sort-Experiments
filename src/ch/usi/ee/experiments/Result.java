@@ -39,7 +39,7 @@ public class Result {
             this.algorithm = _algorithmName;
             this.dataType = _type;
             this.dataOrdering = _ordering;
-            this.elapsedTime = new long[_arraySize];
+            this.elapsedTime = new long[_totalIterations];
         }
     }
 
@@ -49,7 +49,7 @@ public class Result {
         this.algorithm = _algorithmName;
         this.arraySize = _arraySize;
         this.iterations = _totalIterations;
-        this.elapsedTime = new long[_arraySize];
+        this.elapsedTime = new long[_totalIterations];
     }
 
     // Setters

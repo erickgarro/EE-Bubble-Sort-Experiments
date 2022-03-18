@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Stack;
 
-public class StringsPreparator {
+public class StringsProcessor {
     /**
      * Prepares a file with strings of length n to be used in the experiments.
      *
@@ -25,7 +25,7 @@ public class StringsPreparator {
         }
 
         try {
-            DataGenerator.writeData(filteredStrings, "filtered_strings.txt");
+            DataGenerator.writeData(filteredStrings, "filtered_strings_" + stringLength + ".txt");
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;

@@ -54,21 +54,6 @@ public class DataGenerator extends FileWriter {
 
         return data;
     }
-
-    /**
-     * Takes an array of strings and sorts it using quick sort
-     *
-     * @param size          the size of the list
-     * @param sourceStrings the source strings
-     * @return the list of strings
-     */
-    protected static String[] sortStrings(int size, String[] sourceStrings) {
-        String[] data = new String[size];
-        System.arraycopy(sourceStrings, 0, data, 0, size);
-        quickSort(data, 0, size - 1);
-        return data;
-    }
-
     /**
      * Takes an array of strings and generates a random list size n
      *
@@ -85,6 +70,20 @@ public class DataGenerator extends FileWriter {
             data[i] = sourceStrings[random.nextInt(sourceStrings.length - 1)];
         }
 
+        return data;
+    }
+
+    /**
+     * Takes an array of strings and sorts it using quick sort
+     *
+     * @param size          the size of the list
+     * @param sourceStrings the source strings
+     * @return the list of strings
+     */
+    protected static String[] sortStrings(int size, String[] sourceStrings) {
+        String[] data = new String[size];
+        System.arraycopy(sourceStrings, 0, data, 0, size);
+        quickSort(data, 0, size - 1);
         return data;
     }
 }

@@ -4,82 +4,146 @@ import java.io.IOException;
 import java.util.*;
 
 import ch.usi.ee.data.DataGenerator;
-import ch.usi.ee.data.StringsPreparator;
+import ch.usi.ee.enums.DataOrdering;
+import ch.usi.ee.enums.DataType;
 
+import static ch.usi.ee.data.StringsProcessor.prepareStrings;
+import static ch.usi.ee.enums.DataOrdering.*;
+import static ch.usi.ee.enums.DataType.*;
 import static ch.usi.ee.experiments.Experiments.runExperiments;
+import static java.lang.System.exit;
 
 
 public class Main extends DataGenerator {
     public static void main(String[] args) throws IOException {
-        String path = System.getProperty("user.dir");
-        String rawStringsFile = path + "/words_alpha.txt";
+        String workingDirectory = System.getProperty("user.dir");
+        String path = workingDirectory + "/data/";
+        String rawStringsFile = path + "words_alpha.txt";
+        String filteredStringsFile = "filtered_strings_";
+        Map<String, Long> arguments = new HashMap<>();
+        DataType[] dataTypes = {INTEGER, FLOAT, SHORT, STRING};
+        DataOrdering[] dataOrderings = {SORTED, RANDOM, REVERSED};
+        int[] arraySizes = {10, 100, 1000, 10000};
+        int totalIterations = 1000;
         int stringLength = 10;
+        Long seed = null;
         Random rand = new Random();
 
-        if (args.length > 0 && args[0].equals("-init")) {
-            if (args.length == 2) {
-                try {
-                    stringLength = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    System.out.println("The length must be an integer.");
-                    System.out.println("Use the flag -help to see the usage.");
-                    System.exit(1);
-                }
 
-                if (stringLength == 3) {
-                    rawStringsFile = args[2];
-                }
-            }
+        System.out.println("Java Bubble Sort Experiments\n");
 
-            System.out.println("Reading file and filtering strings of length " + stringLength + "...");
-
-            if (StringsPreparator.prepareStrings(rawStringsFile, stringLength)) {
-                System.out.println("String data preparation successful.");
-                System.out.println("You can now run the experiments.");
-                System.exit(0);
-            } else {
-                System.out.println("String data preparation failed.");
-                System.exit(1);
-            }
-        } else if (args.length > 1 && args[0].equals("-seed")) {
-            if (args.length == 2) {
-                try {
-                    rand = new Random(Long.parseLong(args[1]));
-                } catch (NumberFormatException e) {
-                    System.out.println("The seed must be an integer.");
-                    System.out.println("Use the flag -help to see the usage.");
-                    System.exit(1);
-                }
-            }
-            System.out.println("Using provided seed: " + args[1]);
-        } else if (args.length == 1 && args[0].equals("-fixed-seed")) {
-            long seed = 17072021;
-            rand = new Random(seed);
-            System.out.println("Using fixed seed: " + seed);
-        } else if (args.length == 1 && args[0].equals("-help")) {
+        if (args.length == 1 && args[0].equals("-h")) {
             printProgramUsage();
-            System.exit(0);
-        } else {
-            System.out.println("Using system generated random seed.");
+            exit(0);
+        } else if (args.length > 0) {
+            System.out.println("\nChecking for arguments and setting variables...\n");
+
+            // Grab all the command line arguments and put them in a map
+            for (int i = 0; i < args.length; i++) {
+                String arg = args[i];
+                if (arg.startsWith("-")) {
+                    if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
+                        try {
+                            if (arg == "-i" || arg == "-s" || arg == "-l") {
+                                arguments.put(arg, Long.parseLong(args[i + 1]));
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid argument value: " + args[i + 1]);
+                            System.out.println("Execute program with flag -h to see usage.");
+                            exit(1);
+                        }
+                    }
+                }
+            }
         }
 
-        runExperiments(rand);
+        // If the user has specified a value for the number of iterations, use it
+        if (arguments.containsKey("-i")) {
+            totalIterations = Integer.parseInt(arguments.get("-i").toString());
+            System.out.println("Total iterations set to: " + totalIterations);
+        } else {
+            System.out.println("Total iterations set to default value: " + totalIterations);
+        }
+
+        // If the user has specified a value for the string length, use it
+        if (arguments.containsKey("-s")) {
+            seed = arguments.get("-s");
+            rand = new Random(seed);
+            System.out.println("Seed set to: " + seed);
+        } else {
+            System.out.println("Seed set to random value.");
+        }
+
+        // If the user has specified a value for the string length, use it
+        if (arguments.containsKey("-l")) {
+            stringLength = Integer.parseInt(arguments.get("-l").toString());
+            System.out.println("String length set to: " + stringLength);
+        } else {
+            System.out.println("String length set to default value: " + stringLength);
+        }
+
+        System.out.println("Number of Bubble Sort algorithms available: " + arraySizes);
+        System.out.println("Number of data types available: " + dataTypes.length);
+
+        System.out.println("\nData Types available: {");
+        for(int i = 0; i < dataTypes.length; i++) {
+            System.out.print(dataTypes[i].toString());
+            if(i<arraySizes.length - 1){
+                System.out.print(", ");
+            } else {
+                System.out.println("}");
+            }
+        }
+
+        System.out.println("\nData Orderings available: {");
+        for (int i = 0; i < dataOrderings.length; i++) {
+            System.out.print(dataOrderings[i]);
+            if(i<arraySizes.length - 1){
+                System.out.print(", ");
+            } else {
+                System.out.println("}");
+            }
+        }
+        System.out.println("Number of data orderings available: " + dataOrderings.length);
+
+        System.out.print("Array sizes set: {");
+        for (int i = 0; i < arraySizes.length; i++) {
+            System.out.print(arraySizes[i]);
+            if(i<arraySizes.length - 1){
+                System.out.print(", ");
+            } else {
+                System.out.println("}");
+            }
+        }
+
+        if (!new java.io.File(filteredStringsFile + stringLength + ".txt").exists()) {
+            if (!new java.io.File(rawStringsFile).exists()) {
+                System.out.println("The file " + rawStringsFile + " does not exist.\n");
+                System.out.println("This program requires a TXT file with a list of strings of multiple length, that will be filtered and used for the experiments.");
+                System.out.println("The file should be located in the data folder data and should contain one string per line\n");
+                exit(1);
+            } else {
+                if (prepareStrings(rawStringsFile, stringLength)) {
+                    System.out.println("Preparing strings file for the experiments. Filtering strings with length: " + stringLength);
+                    System.out.println("String data preparation successful.");
+                } else {
+                    System.out.println("String data preparation failed.");
+                    System.exit(1);
+                }
+            }
+        }
+
+        runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFile + stringLength + ".txt");
     }
 
     private static void printProgramUsage() {
-        System.out.println("Usage: Java Bubble Sort Experiments [options]\n");
-        System.out.println("Options:");
-        System.out.println("\t-init <length> [path/filename]");
-        System.out.println("\t\tInitializes the string data for the experiments.");
-        System.out.println("\t\tThe length of the strings is specified by the first argument.");
-        System.out.println("\t\tThe filename corresponds to a text file with one string per line, with length at least the specified length.");
-        System.out.println("\t\tThe path/filename is optional, and if not specified, the default path and filename is used.");
-        System.out.println("\t-seed <seed>");
-        System.out.println("\t\tSets the seed for the random number generator.");
-        System.out.println("\t-fixed-seed");
-        System.out.println("\t\tSets the seed for the random number generator to 17072021.");
-        System.out.println("\t-help");
-        System.out.println("\t\tPrints this help message.\n");
-        System.out.println("(By Erick Garro Elizondo and Cindy Guerrero Toro)");
+        System.out.println("Java Bubble Sort Experiments\n");
+        System.out.println("Usage: java -jar <program name>.jar [-h] [-i <iterations>] [-s <seed>] [-l <string length>]\n");
+        System.out.println("\t-i <iterations>\t\tSets the number of iterations to perform. Default is 1000.");
+        System.out.println("\t-s <seed>\t\t\tSets the seed for the random number generator. Default is random.");
+        System.out.println("\t-l <string length>\tSets the length of the strings to be used. Default is 10.");
+        System.out.println("\t-h\t\t\t\t\tPrints this help message.");
+        System.out.println("\nCredits: Created by Erick Garro Elizondo and Cindy Guerrero Toro.");
     }
 }
+
