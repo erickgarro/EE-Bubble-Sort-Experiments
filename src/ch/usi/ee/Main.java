@@ -1,12 +1,12 @@
 package ch.usi.ee;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
 import ch.usi.ee.data.DataGenerator;
 import ch.usi.ee.data.StringsPreparator;
-import ch.usi.ee.experiments.Experiments;
+
+import static ch.usi.ee.experiments.Experiments.runExperiments;
 
 
 public class Main extends DataGenerator {
@@ -63,7 +63,7 @@ public class Main extends DataGenerator {
             System.out.println("Using system generated random seed.");
         }
 
-        Experiments.runExperiments(rand);
+        runExperiments(rand);
     }
 
     private static void printProgramUsage() {

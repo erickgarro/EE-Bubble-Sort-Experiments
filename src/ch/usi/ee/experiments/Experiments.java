@@ -8,7 +8,6 @@ import ch.usi.ee.data.Sorters;
 import ch.usi.ee.enums.DataOrdering;
 import ch.usi.ee.enums.DataType;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Stack;

@@ -2,7 +2,6 @@ package ch.usi.ee.experiments;
 
 import ch.usi.ee.enums.*;
 
-import java.util.Stack;
 
 public class Result {
     private String algorithm;
