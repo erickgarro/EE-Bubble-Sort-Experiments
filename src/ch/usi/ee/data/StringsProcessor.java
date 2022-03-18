@@ -25,7 +25,8 @@ public class StringsProcessor {
         }
 
         try {
-            DataGenerator.writeData(filteredStrings, "filtered_strings_" + stringLength + ".txt");
+            String currentPath = System.getProperty("user.dir");
+            DataGenerator.writeData(filteredStrings, currentPath + "/data/" + "filtered_strings_" + stringLength + ".txt");
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;

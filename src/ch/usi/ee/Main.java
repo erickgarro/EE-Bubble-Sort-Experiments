@@ -18,7 +18,7 @@ public class Main extends DataGenerator {
     public static void main(String[] args) throws IOException {
         String workingDirectory = System.getProperty("user.dir");
         String path = workingDirectory + "/data/";
-        String rawStringsFile = path + "words_alpha.txt";
+        String rawStringsFile = path + "all_strings.txt";
         String filteredStringsFile = "filtered_strings_";
         Map<String, Long> arguments = new HashMap<>();
         DataType[] dataTypes = {INTEGER, FLOAT, SHORT, STRING};
@@ -121,6 +121,7 @@ public class Main extends DataGenerator {
                 System.out.println("The file " + rawStringsFile + " does not exist.\n");
                 System.out.println("This program requires a TXT file with a list of strings of multiple length, that will be filtered and used for the experiments.");
                 System.out.println("The file should be located in the data folder data and should contain one string per line\n");
+                System.out.println("Make sure to store it in the folder <root to program>/data/");
                 exit(1);
             } else {
                 if (prepareStrings(rawStringsFile, stringLength)) {
