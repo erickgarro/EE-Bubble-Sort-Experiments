@@ -154,6 +154,9 @@ public class Main extends DataGenerator {
 
         String filteredStringsFilePath = path + filteredStringsFile + stringLength + ".txt";
         runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
+
+        // TODO: 19.03.22 - Implement the results summary printing and saving to a TXT or CSV file
+
     }
 
     private static void printProgramUsage() {
