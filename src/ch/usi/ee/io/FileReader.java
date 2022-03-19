@@ -9,36 +9,7 @@ import ch.usi.ee.enums.DataType;
 
 
 public class FileReader {
-//    /**
-//     * Reads the data from the file and returns it as an array of the specified type.
-//     *
-//     * @param type      the type of the array to return
-//     * @param ordering  the ordering of the array to return
-//     * @param arraySize the size of the array to return
-//     * @param <T>       the type of the array to return
-//     * @return array of the specified type
-//     * @throws FileNotFoundException
-//     */
-//
-//    public static <T> T[] readData(DataType type, DataOrdering ordering, int arraySize) throws FileNotFoundException {
-//        String filename = "/data/" + type.toString().toLowerCase() + "_" + ordering.toString().toLowerCase() + ".txt";
-//        Class<T> classType = getClass(type);
-//        T[] array = (T[]) java.lang.reflect.Array.newInstance(classType, arraySize);
-//        Scanner scanner;
-//
-//        try {
-//            scanner = new Scanner(Experiments.class.getResourceAsStream(filename));
-//        } catch (Exception e) {
-//            throw new FileNotFoundException("File not found");
-//        }
-//
-//        for (int i = 0; i < arraySize; i++) {
-//            array[i] = classType.cast(scanner.next());
-//        }
-//
-//        return array;
-//    }
-
+    /**
     /**
      * Read a file with Strings and return a Stack of Strings.
      *
@@ -50,35 +21,36 @@ public class FileReader {
         Stack<String> words = new Stack<>();
         BufferedReader reader;
 
-        try {
-            reader = new BufferedReader(new java.io.FileReader(filename));
+        if (stringLength > 1) {
+            try {
+                reader = new BufferedReader(new java.io.FileReader(filename));
 
-        } catch (Exception e) {
-            throw new FileNotFoundException("File not found");
-        }
-
-        while (reader.ready()) {
-            String line = reader.readLine();
-            String[] wordsInLine = line.split(" ");
-
-            for (String word : wordsInLine) {
-                if (word.length() == stringLength) {
-                    words.push(word);
-                }
+            } catch (Exception e) {
+                throw new FileNotFoundException("File not found");
             }
 
+            while (reader.ready()) {
+                String line = reader.readLine();
+                String[] wordsInLine = line.split(" ");
+
+                for (String word : wordsInLine) {
+                    if (word.length() == stringLength) {
+                        words.push(word);
+                    }
+                }
+
+            }
+            reader.close();
+
+            System.out.println("Processing string files...");
+            System.out.println("  Filtering strings with length: " + stringLength);
+
+
+            if (words.size() == 0) {
+                System.out.println("No strings with length " + stringLength + " were found.\n");
+                System.out.println("Try invoking the program again with a different length.\n");
+            }
         }
-        reader.close();
-
-        System.out.println("Strings filtered: " + words.size());
-        System.out.println("Length of strings: " + stringLength);
-
-        if(words.size() == 0) {
-        	System.out.println("No strings with length " + stringLength + " were found.");
-        	System.out.println("Try again with a different length.");
-            System.exit(1);
-        }
-
         return words;
     }
 

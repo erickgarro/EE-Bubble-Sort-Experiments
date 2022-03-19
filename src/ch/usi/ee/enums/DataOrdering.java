@@ -1,7 +1,7 @@
 package ch.usi.ee.enums;
 
 public enum DataOrdering {
-    SORTED,
+    ASC,
     RANDOM,
-    REVERSED
+    DESC
 }

@@ -2,46 +2,14 @@ package ch.usi.ee.data;
 
 public class Sorters {
     /**
-     * Reverse the order of the elements in the int array
-     *
-     * @param source the array to reverse
-     * @param size   the size of the array
-     * @return the reversed array
-     */
-    public static int[] reverseArray(int[] source, int size) {
-        int[] reversedIntegers = new int[size];
-        for (int i = 0; i < size; i++) {
-            reversedIntegers[i] = source[size - i - 1];
-        }
-
-        return reversedIntegers;
-    }
-
-    /**
-     * Reverse the order of the elements in the short array
-     *
-     * @param source the array to reverse
-     * @param size   the size of the array
-     * @return the reversed array
-     */
-    public static short[] reverseArray(short[] source, int size) {
-        short[] reversedShorts = new short[size];
-        for (int i = 0; i < size; i++) {
-            reversedShorts[i] = source[size - i - 1];
-        }
-
-        return reversedShorts;
-    }
-
-    /**
      * Reverse the order of the elements in the float array
      *
-     * @param source the array to reverse
+     * @param source array to reverse
      * @param size   the size of the array
      * @return the reversed array
      */
-    public static float[] reverseArray(float[] source, int size) {
-        float[] reversedFloats = new float[size];
+    public static Comparable[] reverseArray(Comparable[] source, int size) {
+        Comparable[] reversedFloats = new Comparable[size];
         for (int i = 0; i < size; i++) {
             reversedFloats[i] = source[size - i - 1];
         }
@@ -50,152 +18,9 @@ public class Sorters {
     }
 
     /**
-     * Reverse the order of the elements in the string array
-     *
-     * @param source the array to reverse
-     * @param size   the size of the array
-     * @return the reversed array
-     */
-    public static String[] reverseArray(String[] source, int size) {
-        String[] reversedStrings = new String[size];
-        for (int i = 0; i < size; i++) {
-            reversedStrings[i] = source[size - i - 1];
-        }
-
-        return reversedStrings;
-    }
-
-    /**
-     * Quick sort an array of type int
-     *
-     * @param source the array to sort
-     * @param start  the start index
-     * @param end    the end index
-     * @return the sorted array
-     */
-    public static int[] quickSort(int[] source, int start, int end) {
-        int i = start;
-        int j = end;
-        int pivot = source[(start + end) / 2];
-
-        while (i <= j) {
-            while (source[i] < pivot) {
-                i++;
-            }
-
-            while (source[j] > pivot) {
-                j--;
-            }
-
-            if (i <= j) {
-                int temp = source[i];
-                source[i] = source[j];
-                source[j] = temp;
-                i++;
-                j--;
-            }
-        }
-
-        if (start < j) {
-            quickSort(source, start, j);
-        }
-
-        if (i < end) {
-            quickSort(source, i, end);
-        }
-
-        return source;
-    }
-
-
-    /**
-     * Quick sort an array of type short
-     *
-     * @param source the array to sort
-     * @param start  the start index
-     * @param end    the end index
-     * @return the sorted array
-     */
-    public static short[] quickSort(short[] source, int start, int end) {
-        int i = start;
-        int j = end;
-        short pivot = source[(start + end) / 2];
-
-        while (i <= j) {
-            while (source[i] < pivot) {
-                i++;
-            }
-
-            while (source[j] > pivot) {
-                j--;
-            }
-
-            if (i <= j) {
-                short temp = source[i];
-                source[i] = source[j];
-                source[j] = temp;
-                i++;
-                j--;
-            }
-        }
-
-        if (start < j) {
-            quickSort(source, start, j);
-        }
-
-        if (i < end) {
-            quickSort(source, i, end);
-        }
-
-        return source;
-    }
-
-    /**
-     * Quick sort an array of type float
-     *
-     * @param source the array to sort
-     * @param start  the start index
-     * @param end    the end index
-     * @return the sorted array
-     */
-    public static float[] quickSort(float[] source, int start, int end) {
-        int i = start;
-        int j = end;
-        float pivot = source[(start + end) / 2];
-
-        while (i <= j) {
-            while (source[i] < pivot) {
-                i++;
-            }
-
-            while (source[j] > pivot) {
-                j--;
-            }
-
-            if (i <= j) {
-                float temp = source[i];
-                source[i] = source[j];
-                source[j] = temp;
-                i++;
-                j--;
-            }
-        }
-
-        if (start < j) {
-            quickSort(source, start, j);
-        }
-
-        if (i < end) {
-            quickSort(source, i, end);
-        }
-
-        return source;
-    }
-
-    /**
      * Quick sort an array of type int, short, float, or String
      *
-     * @param source the array to sort
+     * @param source array to sort
      * @param start  the start index
      * @param end    the end index
      * @return the sorted array
@@ -216,48 +41,6 @@ public class Sorters {
 
             if (i <= j) {
                 Object temp = source[i];
-                source[i] = source[j];
-                source[j] = temp;
-                i++;
-                j--;
-            }
-        }
-
-        if (start < j) {
-            quickSort(source, start, j);
-        }
-
-        if (i < end) {
-            quickSort(source, i, end);
-        }
-
-        return source;
-    }
-
-    /**
-     * Quick sort an array of type String
-     *
-     * @param source the array to sort
-     * @param start  the start index
-     * @param end    the end index
-     * @return the sorted array
-     */
-    protected static String[] quickSort(String[] source, int start, int end) {
-        int i = start;
-        int j = end;
-        String pivot = source[(start + end) / 2];
-
-        while (i <= j) {
-            while (source[i].compareTo(pivot) < 0) {
-                i++;
-            }
-
-            while (source[j].compareTo(pivot) > 0) {
-                j--;
-            }
-
-            if (i <= j) {
-                String temp = source[i];
                 source[i] = source[j];
                 source[j] = temp;
                 i++;

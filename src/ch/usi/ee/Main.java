@@ -20,23 +20,25 @@ public class Main extends DataGenerator {
         String path = workingDirectory + "/data/";
         String rawStringsFile = path + "all_strings.txt";
         String filteredStringsFile = "filtered_strings_";
-        Map<String, Long> arguments = new HashMap<>();
+        Map<String, Stack<Long>> arguments = new HashMap<>();
         DataType[] dataTypes = {INTEGER, FLOAT, SHORT, STRING};
-        DataOrdering[] dataOrderings = {SORTED, RANDOM, REVERSED};
-        int[] arraySizes = {10, 100, 1000, 10000};
+        DataOrdering[] dataOrderings = {ASC, RANDOM, DESC};
+        Stack<Long> arraySizes = new Stack<>();
         int totalIterations = 1000;
         int stringLength = 10;
-        Long seed = null;
+        Long seed;
         Random rand = new Random();
 
+        System.out.println("Java Bubble Sort Experiments");
+        System.out.println("by Erick Garro Elizondo and Cindy Guerrero Toro.\n");
 
-        System.out.println("Java Bubble Sort Experiments\n");
 
+        // Parse arguments
         if (args.length == 1 && args[0].equals("-h")) {
             printProgramUsage();
             exit(0);
         } else if (args.length > 0) {
-            System.out.println("\nChecking for arguments and setting variables...\n");
+            System.out.println("Checking for arguments and setting variables...\n");
 
             // Grab all the command line arguments and put them in a map
             for (int i = 0; i < args.length; i++) {
@@ -44,8 +46,17 @@ public class Main extends DataGenerator {
                 if (arg.startsWith("-")) {
                     if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
                         try {
-                            if (arg == "-i" || arg == "-s" || arg == "-l") {
-                                arguments.put(arg, Long.parseLong(args[i + 1]));
+                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a")) {
+                                Stack<Long> argValues = new Stack<>();
+                                if (arg.equals("-a")) {
+                                    String[] arraySizesValues = args[i + 1].split(",");
+                                    for (String value : arraySizesValues) {
+                                        argValues.push(Long.parseLong(value));
+                                    }
+                                } else {
+                                    argValues.push(Long.parseLong(args[i + 1]));
+                                }
+                                arguments.put(arg, argValues);
                             }
                         } catch (NumberFormatException e) {
                             System.out.println("Invalid argument value: " + args[i + 1]);
@@ -57,66 +68,71 @@ public class Main extends DataGenerator {
             }
         }
 
-        // If the user has specified a value for the number of iterations, use it
-        if (arguments.containsKey("-i")) {
-            totalIterations = Integer.parseInt(arguments.get("-i").toString());
-            System.out.println("Total iterations set to: " + totalIterations);
-        } else {
-            System.out.println("Total iterations set to default value: " + totalIterations);
-        }
+        System.out.println("Experiment settings:");
 
         // If the user has specified a value for the string length, use it
         if (arguments.containsKey("-s")) {
-            seed = arguments.get("-s");
+            seed = arguments.get("-s").get(0);
             rand = new Random(seed);
-            System.out.println("Seed set to: " + seed);
+            System.out.println("  Seed set to: " + seed);
         } else {
-            System.out.println("Seed set to random value.");
+            System.out.println("  Seed set to random value.");
+        }
+
+        // If the user has specified a value for the number of iterations, use it
+        if (arguments.containsKey("-i")) {
+            totalIterations = Integer.parseInt(arguments.get("-i").get(0).toString());
+            System.out.println("  Total iterations set to: " + totalIterations);
+        } else {
+            System.out.println("  Total iterations set to default value: " + totalIterations);
+        }
+
+        // If the user has specified a value for the array size, use it
+        if (arguments.containsKey("-a")) {
+            arraySizes = arguments.get("-a");
+            System.out.println("  Array sizes set to: " + arraySizes);
+        } else {
+            arraySizes.push(10L);
+            arraySizes.push(100L);
+            arraySizes.push(1000L);
+            arraySizes.push(10000L);
+            System.out.println("  Array sizes set to default value: " + arraySizes);
         }
 
         // If the user has specified a value for the string length, use it
         if (arguments.containsKey("-l")) {
-            stringLength = Integer.parseInt(arguments.get("-l").toString());
-            System.out.println("String length set to: " + stringLength);
+            stringLength = Integer.parseInt(arguments.get("-l").get(0).toString());
+            System.out.println("  String length set to: " + stringLength);
         } else {
-            System.out.println("String length set to default value: " + stringLength);
+            System.out.println("  String length set to default value: " + stringLength);
         }
 
-        System.out.println("Number of Bubble Sort algorithms available: " + arraySizes);
-        System.out.println("Number of data types available: " + dataTypes.length);
-
-        System.out.println("\nData Types available: {");
-        for(int i = 0; i < dataTypes.length; i++) {
+        // Print other variable information
+        System.out.print("  Data Types available: {");
+        for (int i = 0; i < dataTypes.length; i++) {
             System.out.print(dataTypes[i].toString());
-            if(i<arraySizes.length - 1){
+            if (i < arraySizes.size()) {
                 System.out.print(", ");
             } else {
                 System.out.println("}");
             }
         }
 
-        System.out.println("\nData Orderings available: {");
+        System.out.print("  Data Orderings available: {");
         for (int i = 0; i < dataOrderings.length; i++) {
             System.out.print(dataOrderings[i]);
-            if(i<arraySizes.length - 1){
-                System.out.print(", ");
-            } else {
-                System.out.println("}");
-            }
-        }
-        System.out.println("Number of data orderings available: " + dataOrderings.length);
-
-        System.out.print("Array sizes set: {");
-        for (int i = 0; i < arraySizes.length; i++) {
-            System.out.print(arraySizes[i]);
-            if(i<arraySizes.length - 1){
+            if (i < arraySizes.size() - 1) {
                 System.out.print(", ");
             } else {
                 System.out.println("}");
             }
         }
 
-        if (!new java.io.File(filteredStringsFile + stringLength + ".txt").exists()) {
+        System.out.println("  Number of data orderings available: " + dataOrderings.length);
+        System.out.println("  Number of Bubble Sort algorithms available: " + 3 + "\n");
+
+        // Look for the strings source files
+        if (!new java.io.File(path + filteredStringsFile + stringLength + ".txt").exists()) {
             if (!new java.io.File(rawStringsFile).exists()) {
                 System.out.println("The file " + rawStringsFile + " does not exist.\n");
                 System.out.println("This program requires a TXT file with a list of strings of multiple length, that will be filtered and used for the experiments.");
@@ -124,17 +140,20 @@ public class Main extends DataGenerator {
                 System.out.println("Make sure to store it in the folder <root to program>/data/");
                 exit(1);
             } else {
+                System.out.println("Preparing strings file for the experiments. Filtering strings with length: " + stringLength);
+
                 if (prepareStrings(rawStringsFile, stringLength)) {
-                    System.out.println("Preparing strings file for the experiments. Filtering strings with length: " + stringLength);
-                    System.out.println("String data preparation successful.");
+                    System.out.println("String data preparation successful\n");
                 } else {
                     System.out.println("String data preparation failed.");
+                    System.out.println("Invoke the program again with another string size value.\n");
                     System.exit(1);
                 }
             }
         }
 
-        runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFile + stringLength + ".txt");
+        String filteredStringsFilePath = path + filteredStringsFile + stringLength + ".txt";
+        runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
     }
 
     private static void printProgramUsage() {
@@ -143,8 +162,10 @@ public class Main extends DataGenerator {
         System.out.println("\t-i <iterations>\t\tSets the number of iterations to perform. Default is 1000.");
         System.out.println("\t-s <seed>\t\t\tSets the seed for the random number generator. Default is random.");
         System.out.println("\t-l <string length>\tSets the length of the strings to be used. Default is 10.");
+        System.out.println("\t-a <array size>\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 10,100,1000,10000.");
         System.out.println("\t-h\t\t\t\t\tPrints this help message.");
         System.out.println("\nCredits: Created by Erick Garro Elizondo and Cindy Guerrero Toro.");
+        System.out.println("\nWith a hand of GitHub Copilot ;-)");
     }
 }
 

@@ -24,6 +24,10 @@ public class StringsProcessor {
             e.printStackTrace();
         }
 
+        if (filteredStrings.size() == 0) {
+            return false;
+        }
+
         try {
             String currentPath = System.getProperty("user.dir");
             DataGenerator.writeData(filteredStrings, currentPath + "/data/" + "filtered_strings_" + stringLength + ".txt");
@@ -31,6 +35,7 @@ public class StringsProcessor {
             System.out.println(e.getMessage());
             return false;
         }
+
         return true;
     }
 }

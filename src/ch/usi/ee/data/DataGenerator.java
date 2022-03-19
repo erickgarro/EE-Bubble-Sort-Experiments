@@ -13,8 +13,8 @@ public class DataGenerator extends FileWriter {
      * @param arraySize the size of the list
      * @return the list of integers
      */
-    public static int[] generateRandomIntegers(Random random, int arraySize) {
-        int[] data = new int[arraySize];
+    public static Comparable[] generateRandomIntegers(Random random, int arraySize) {
+        Comparable[] data = new Comparable[arraySize];
 
         for (int i = 0; i < arraySize; i++) {
             data[i] = random.nextInt() * (Integer.MAX_VALUE - Integer.MIN_VALUE) + 1;
@@ -30,8 +30,8 @@ public class DataGenerator extends FileWriter {
      * @param size   the size of the list
      * @return the list of integers
      */
-    public static short[] generateRandomShorts(Random random, int size) {
-        short[] data = new short[size];
+    public static Comparable[] generateRandomShorts(Random random, int size) {
+        Comparable[] data = new Comparable[size];
         for (int i = 0; i < size; i++) {
             data[i] = (short) (random.nextInt(Short.MAX_VALUE - Short.MIN_VALUE) + 1);
         }
@@ -45,8 +45,8 @@ public class DataGenerator extends FileWriter {
      * @param size the size of the list
      * @return the list of floats
      */
-    public static float[] generateRandomFloats(Random random, int size) {
-        float[] data = new float[size];
+    public static Comparable[] generateRandomFloats(Random random, int size) {
+        Comparable[] data = new Comparable[size];
 
         for (int i = 0; i < size; i++) {
             data[i] = (random.nextFloat() * (Float.MAX_VALUE - Float.MIN_VALUE) + 1);
@@ -62,8 +62,8 @@ public class DataGenerator extends FileWriter {
      * @param sourceStrings the source strings
      * @return the list of strings
      */
-    public static String[] generateRandomStrings(Random random, int size, String[] sourceStrings) {
-        String[] data = new String[size];
+    public static Comparable[] generateRandomStrings(Random random, int size, String[] sourceStrings) {
+        Comparable[] data = new Comparable[size];
 
 
         for (int i = 0; i < size; i++) {
@@ -80,8 +80,8 @@ public class DataGenerator extends FileWriter {
      * @param sourceStrings the source strings
      * @return the list of strings
      */
-    protected static String[] sortStrings(int size, String[] sourceStrings) {
-        String[] data = new String[size];
+    protected static Comparable[] sortStrings(int size, String[] sourceStrings) {
+        Comparable[] data = new Comparable[size];
         System.arraycopy(sourceStrings, 0, data, 0, size);
         quickSort(data, 0, size - 1);
         return data;

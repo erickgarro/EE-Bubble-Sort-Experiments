@@ -1,6 +1,7 @@
 package ch.usi.ee.experiments;
 
 import static ch.usi.ee.data.DataGenerator.*;
+import static java.lang.System.exit;
 
 import ch.usi.ee.bubble_sort.BubbleSortPassPerItem;
 import ch.usi.ee.bubble_sort.BubbleSortUntilNoChange;
@@ -24,17 +25,12 @@ public class Experiments {
      * @param totalIterations   The total number of iterations.
      * @param dataTypes         The data types to be tested.
      * @param dataOrderings     The data orderings to be tested.
-     * @param stringsSourceFile The source file for the strings.
+     * @param stringsSourceFile The source file for the strings to be selected randomly.
      * @throws IOException
      */
-    public static void runExperiments(Random rand, int[] arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
+    public static void runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
         int numberOfAlgorithms = 3;
-        String[] filteredStrings = null;
-
-        int[] randomIntegers = null, sortedIntegers = null, reversedIntegers = null;
-        short[] randomShorts = null, sortedShorts = null, reversedShorts = null;
-        float[] randomFloats = null, sortedFloats = null, reversedFloats = null;
-        String[] randomStrings = null, sortedStrings = null, reversedStrings = null;
+        String[] filteredStrings = readData(stringsSourceFile);
 
         Stack<Result> BubbleSortPassPerItemResults = new Stack<Result>();
         Stack<Result> BubbleSortUntilNoChangeResults = new Stack<Result>();
@@ -47,110 +43,124 @@ public class Experiments {
         sorters[2] = new BubbleSortWhileNeeded();
 
         System.out.println("Running experiments...\n");
-        for (Sorter sorter : sorters) {
-            if (sorter instanceof BubbleSortPassPerItem) {
-                results = BubbleSortPassPerItemResults;
-            } else if (sorter instanceof BubbleSortUntilNoChange) {
-                results = BubbleSortUntilNoChangeResults;
-            } else {
-                results = BubbleSortWhileNeededResults;
-            }
 
-            for (DataType type : dataTypes) {
+        Comparable[] randomIntegers = null, sortedIntegers = null, reversedIntegers = null;
+        Comparable[] randomShorts = null, sortedShorts = null, reversedShorts = null;
+        Comparable[] randomFloats = null, sortedFloats = null, reversedFloats = null;
+        Comparable[] randomStrings = null, sortedStrings = null, reversedStrings = null;
+        Comparable[] toSort = null;
+
+        System.gc(); // Force garbage collection
+
+        for (DataType type : dataTypes) {
+            for (Long arraySize : arraySizes) {
+                int size = arraySize.intValue();
+                randomIntegers = generateRandomIntegers(rand, size);
+                randomShorts = generateRandomShorts(rand, size);
+                randomStrings = generateRandomStrings(rand, size, filteredStrings);
+                randomFloats = generateRandomFloats(rand, size);
+
                 for (DataOrdering ordering : dataOrderings) {
-                    for (int size : arraySizes) {
-                        System.gc(); // Force garbage collection
-                        Result iteration_result = new Result(type, ordering, sorter.getClass().getName(), size, totalIterations);
+                    // Get the data to be sorted according to the type ordering and array size
+                    switch (type) {
+                        case INTEGER:
+                            switch (ordering) {
+                                case RANDOM:
+                                    toSort = randomIntegers.clone();
+                                    break;
+                                case ASC:
+                                    sortedIntegers = (Comparable[]) Sorters.quickSort(randomIntegers.clone(), 0, size - 1);
+                                    toSort = sortedIntegers.clone();
+                                    break;
+                                case DESC:
+                                    reversedIntegers = Sorters.reverseArray(sortedIntegers.clone(), size).clone();
+                                    toSort = reversedIntegers.clone();
+                                    break;
+                                default:
+                                    System.out.println("Invalid ordering");
+                                    exit(1);
+                                    break;
+                            }
+                            break;
+                        case SHORT:
+                            switch (ordering) {
+                                case RANDOM:
+                                    toSort = randomShorts.clone();
+                                    break;
+                                case ASC:
+                                    sortedShorts = (Comparable[]) Sorters.quickSort(randomShorts.clone(), 0, size - 1);
+                                    toSort = sortedShorts.clone();
+                                    break;
+                                case DESC:
+                                    reversedShorts = Sorters.reverseArray(sortedShorts.clone(), size).clone();
+                                    toSort = reversedShorts.clone();
+                                    break;
+                                default:
+                                    System.out.println("Sorting order not supported");
+                                    exit(1);
+                                    break;
+                            }
+                            break;
+                        case FLOAT:
+                            switch (ordering) {
+                                case RANDOM:
+                                    toSort = randomFloats.clone();
+                                    break;
+                                case ASC:
+                                    sortedFloats = (Comparable[]) Sorters.quickSort(randomFloats.clone(), 0, size - 1);
+                                    toSort = sortedFloats.clone();
+                                    break;
+                                case DESC:
+                                    reversedFloats = Sorters.reverseArray(sortedFloats, size).clone();
+                                    toSort = reversedFloats.clone();
+                                    break;
+                                default:
+                                    System.out.println("Invalid ordering");
+                                    exit(1);
+                                    break;
+                            }
+                            break;
+                        case STRING:
+                            switch (ordering) {
+                                case RANDOM:
+                                    toSort = randomStrings.clone();
+                                    break;
+                                case ASC:
+                                    sortedStrings = (Comparable[]) Sorters.quickSort(randomStrings.clone(), 0, size - 1);
+                                    toSort = sortedStrings.clone();
+                                    break;
+                                case DESC:
+                                    reversedStrings = Sorters.reverseArray(sortedStrings.clone(), size).clone();
+                                    toSort = reversedStrings.clone();
+                                    break;
+                                default:
+                                    System.out.println("Invalid ordering");
+                                    exit(1);
+                                    break;
+                            }
+                            break;
+                        default:
+                            System.out.println("Type not implemented");
+                            exit(1);
+                            break;
+                    }
 
-                        // Get the data to be sorted according to the type ordering and array size
-                        switch (type) {
-                            case INTEGER:
-                                switch (ordering) {
-                                    case RANDOM:
-                                        randomIntegers = generateRandomIntegers(rand, size);
-                                        System.out.println("  Random integers list of size " + size + "... \tOK");
-                                        break;
-                                    case SORTED:
-                                        sortedIntegers = Sorters.quickSort(randomIntegers, 0, size - 1);
-                                        System.out.println("  Sorted integers list of size " + size + "... \tOK");
-                                        break;
-                                    case REVERSED:
-                                        reversedIntegers = Sorters.reverseArray(sortedIntegers, size);
-                                        System.out.println("  Reversed ints list of size " + size + "... \tOK");
-                                        break;
-                                    default:
-                                        System.out.println("Invalid ordering");
-                                        System.exit(1);
-                                        break;
-                                }
-                                break;
-                            case SHORT:
-                                switch (ordering) {
-                                    case RANDOM:
-                                        randomShorts = generateRandomShorts(rand, size);
-                                        System.out.println("  Random shorts list of size " + size + "... \tOK");
-                                        break;
-                                    case SORTED:
-                                        sortedShorts = Sorters.quickSort(randomShorts, 0, size - 1);
-                                        System.out.println("  Sorted shorts list of size " + size + "... \tOK");
-                                        break;
-                                    case REVERSED:
-                                        reversedShorts = Sorters.reverseArray(sortedShorts, size);
-                                        System.out.println("  Reversed shorts list of size " + size + "... \tOK");
-                                        break;
-                                    default:
-                                        System.out.println("Sorting order not supported");
-                                        System.exit(1);
-                                        break;
-                                }
-                                break;
-                            case STRING:
-                                switch (ordering) {
-                                    case RANDOM:
-                                        randomStrings = generateRandomStrings(rand, size, filteredStrings);
-                                        System.out.println("  Random strings list of size " + size + "... \tOK");
-                                        break;
-                                    case SORTED:
-                                        sortedStrings = (String[]) Sorters.quickSort(randomStrings, 0, size - 1);
-                                        System.out.println("  Sorted strings list of size " + size + "... \tOK");
-                                        break;
-                                    case REVERSED:
-                                        reversedStrings = Sorters.reverseArray(sortedStrings, size);
-                                        System.out.println("  Reversed strings list of size " + size + "... \tOK");
-                                        break;
-                                    default:
-                                        System.out.println("Invalid ordering");
-                                        System.exit(1);
-                                        break;
-                                }
-                                break;
-                            case FLOAT:
-                                switch (ordering) {
-                                    case RANDOM:
-                                        randomFloats = generateRandomFloats(rand, size);
-                                        System.out.println("  Random floats list of size " + size + "... \tOK");
-                                        break;
-                                    case SORTED:
-                                        sortedFloats = Sorters.quickSort(randomFloats, 0, size - 1);
-                                        System.out.println("  Sorted floats list of size " + size + "... \tOK");
-                                        break;
-                                    case REVERSED:
-                                        reversedFloats = Sorters.reverseArray(sortedFloats, size);
-                                        System.out.println("  Reversed floats list of size " + size + "... \tOK");
-                                        break;
-                                    default:
-                                        System.out.println("Invalid ordering");
-                                        System.exit(1);
-                                        break;
-                                }
-                                System.out.println("Type not implemented");
-                                System.exit(1);
-                                break;
+                    for (Sorter sorter : sorters) {
+                        Result iteration_result = new Result(type, ordering, sorter.getClass().getName(), size, totalIterations);
+                        System.gc(); // Force garbage collection
+
+                        if (sorter instanceof BubbleSortPassPerItem) {
+                            results = BubbleSortPassPerItemResults;
+                        } else if (sorter instanceof BubbleSortUntilNoChange) {
+                            results = BubbleSortUntilNoChangeResults;
+                        } else {
+                            results = BubbleSortWhileNeededResults;
                         }
 
+                        // Run the sorting algorithms
                         for (int i = 0; i < totalIterations; i++) {
                             long startTime = System.nanoTime();
-                            sorter.sort(randomStrings);
+                            sorter.sort(toSort);
                             long endTime = System.nanoTime();
                             long elapsedTime = endTime - startTime;
 
@@ -163,6 +173,6 @@ public class Experiments {
                 }
             }
         }
-        System.out.println("Experiments completed.\n");
+        System.out.println("Experiments completed.");
     }
 }
