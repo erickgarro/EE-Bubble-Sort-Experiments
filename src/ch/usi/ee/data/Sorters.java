@@ -1,5 +1,13 @@
 package ch.usi.ee.data;
 
+/**
+ * Experimentation & Evaluation SP2022
+ * USI - Università della Svizzera italiana
+ * Project: Java Bubble Sort Experiments
+ *
+ * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
+ */
+
 public class Sorters {
     /**
      * Reverse the order of the elements in the float array

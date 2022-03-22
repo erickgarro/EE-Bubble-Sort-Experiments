@@ -1,4 +1,12 @@
-package ch.usi.ee.experiments;
+/**
+ * Experimentation & Evaluation SP2022
+ * USI - Università della Svizzera italiana
+ * Project: Java Bubble Sort Experiments
+ *
+ * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
+ */
+
+package ch.usi.ee.statistics;
 
 import ch.usi.ee.enums.*;
 
@@ -123,10 +131,36 @@ public class Result {
     }
 
     /**
-     * Get the total number of iterations ran for the experiment
-     * @return Total number of iterations
+     * Get min value elapsed time
+     * @return  Min value elapsed time
      */
-    public int getNumberOfIterations() {
-        return iterations;
+    public long getMinResult() {
+        long min = elapsedTime[0];
+
+        for (int i = 0; i < elapsedTime.length; i++) {
+            if (elapsedTime[i] < min) {
+                min = elapsedTime[i];
+            }
+        }
+
+        return min;
     }
+
+    /**
+     * Get max value elapsed time
+     * @return  Max value elapsed time
+     */
+    public long getMaxResult() {
+        long max = elapsedTime[0];
+
+        for (int i = 0; i < elapsedTime.length; i++) {
+            if (elapsedTime[i] > max) {
+                max = elapsedTime[i];
+            }
+        }
+
+        return max;
+    }
+
+
 }

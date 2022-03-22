@@ -1,3 +1,18 @@
+/**
+ * Experimentation & Evaluation SP2022
+ * USI - Università della Svizzera italiana
+ * Project: Java Bubble Sort Experiments
+ *
+ * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
+ */
+/**
+ * Experimentation & Evaluation SP2022
+ * USI - Università della Svizzera italiana
+ * Project: Java Bubble Sort Experiments
+ *
+ * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
+ */
+
 package ch.usi.ee.data;
 
 import java.io.FileNotFoundException;

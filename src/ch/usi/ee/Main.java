@@ -1,3 +1,11 @@
+/**
+ * Experimentation & Evaluation SP2022
+ * USI - Università della Svizzera italiana
+ * Project: Java Bubble Sort Experiments
+ * <p>
+ * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
+ */
+
 package ch.usi.ee;
 
 import java.io.IOException;
@@ -7,12 +15,14 @@ import ch.usi.ee.data.DataGenerator;
 import ch.usi.ee.enums.Algorithm;
 import ch.usi.ee.enums.DataOrdering;
 import ch.usi.ee.enums.DataType;
-import ch.usi.ee.experiments.Result;
+import ch.usi.ee.statistics.Result;
+import ch.usi.ee.statistics.Statistics;
 
-import static ch.usi.ee.data.StringsProcessor.prepareStrings;
+import static ch.usi.ee.data.StringsProcessor.*;
 import static ch.usi.ee.enums.DataOrdering.*;
 import static ch.usi.ee.enums.DataType.*;
-import static ch.usi.ee.experiments.Experiments.runExperiments;
+import static ch.usi.ee.experiments.Experiments.*;
+import static ch.usi.ee.statistics.StatisticsGenerator.*;
 import static java.lang.System.exit;
 
 
@@ -103,13 +113,24 @@ public class Main extends DataGenerator {
         // If the user has specified a value for the array size, use it
         if (arguments.containsKey("-a")) {
             arraySizes = arguments.get("-a");
-            System.out.println("  Array sizes set to: " + arraySizes);
         } else {
             arraySizes.push(10L);
             arraySizes.push(100L);
             arraySizes.push(1000L);
             arraySizes.push(10000L);
-            System.out.println("  Array sizes set to default value: " + arraySizes);
+            System.out.println("  Array sizes set to default value: ");
+        }
+
+        System.out.print("  Array sizes set to: {");
+        for (Long size : arraySizes) {
+            System.out.print(size);
+
+            if (size != arraySizes.lastElement()) {
+                System.out.print(", ");
+            } else {
+                System.out.println("}");
+            }
+
         }
 
         // If the user has specified a value for the string length, use it
@@ -147,8 +168,16 @@ public class Main extends DataGenerator {
             }
         }
 
-        System.out.println("  Number of data orderings available: " + dataOrderings.length);
-        System.out.println("  Number of Bubble Sort algorithms available: " + 3 + "\n");
+        System.out.print("  Algorithms available to experiment: {");
+        for (Algorithm algorithm : Algorithm.values()) {
+            System.out.print(algorithm.toString());
+
+            if(algorithm != Algorithm.values()[Algorithm.values().length - 1]) {
+                System.out.print(", ");
+            } else {
+                System.out.println("}");
+            }
+        }
 
         // Look for the strings source files
         if (!new java.io.File(path + filteredStringsFile + stringLength + ".txt").exists()) {
@@ -174,141 +203,24 @@ public class Main extends DataGenerator {
         // Execute the experiments
         String filteredStringsFilePath = path + filteredStringsFile + stringLength + ".txt";
         Stack<Result>[] results = runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
-//        Serializer.serializeResults(results); //todo: fix serialization
 
-        // Generate the statistics
+        // Generate statistics
+        Stack<Statistics> statistics = calculateStats(results, arraySizes, lastNumberOfIterations);
+        printStatistics(statistics);
+
         // TODO: 19.03.22 - Implement the results summary printing and saving to a TXT or CSV file
-        calculateStatistics(results, arraySizes, lastNumberOfIterations);
     }
-
-    // The function receives an Object Stack with three Result Stacks
-    // it calculates the mean of the results by algorithm, data type, and ordering, for the last n iterations of the experiment
-    private static void calculateStatistics(Stack<Result>[] allResults, Stack<Long> arraySizes, int lastNumberOfIterations) {
-        double standardDeviation = 0.0;
-        double firstQuartile = 0.0;
-        double thirdQuartile = 0.0;
-        double median = 0.0;
-        double mean = 0.0;
-        double firstValue = 0.0;
-        double lastValue = 0.0;
-        Long[] lastNResults = null;
-        Long[] lastNResultsSorted = null;
-        Algorithm algo = null;
-        String algoName = null;
-        DataType dType = null;
-        DataOrdering dOrdering = null;
-        int aSize = 0;
-        int nIterations = 0;
-        int nLastNumberOfIterations = 0;
-
-        for (Stack<Result> algoResults : allResults) {
-            for (Result perAlgorigthmResults : algoResults) {
-
-                for (Long arraySize : arraySizes) {
-                    for (Algorithm algorithm : Algorithm.values()) {
-                        for (DataType dataType : DataType.values()) {
-                            for (DataOrdering dataOrdering : DataOrdering.values()) {
-                                algo = perAlgorigthmResults.getAlgorithm();
-                                algoName = algorithm.toString();
-                                dType = perAlgorigthmResults.getDataType();
-                                dOrdering = perAlgorigthmResults.getDataOrdering();
-                                aSize = perAlgorigthmResults.getArraySize();
-                                nIterations = perAlgorigthmResults.getNumberOfIterations();
-                                nLastNumberOfIterations = lastNumberOfIterations;
-
-                                lastNResults = perAlgorigthmResults.getLastNResults(lastNumberOfIterations);
-                                lastNResultsSorted = lastNResults.clone();
-                                firstValue = perAlgorigthmResults.getFirstResult();
-                                lastValue =perAlgorigthmResults.getLastResult();
-                                mean = calculateMean(lastNResults);
-                                standardDeviation = calculateStandardDeviation(lastNResults, mean);
-                                median = calculateMedian(lastNResultsSorted);
-                                firstQuartile = calculateFirstQuartile(lastNResultsSorted);
-                                thirdQuartile = calculateThirdQuartile(lastNResultsSorted);
-
-                                int k = 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Calculate the median given a Long array of results
-     *
-     * @param results The Long array of results
-     * @return The median of the results
-     */
-    private static double calculateMedian(Long[] results) {
-        Arrays.sort(results);
-        return results[results.length / 2];
-    }
-
-    /**
-     * Calculate the mean given a Long array of results
-     *
-     * @param results The Long array of results
-     * @return The mean of the results
-     */
-    private static double calculateMean(Long[] results) {
-        double sum = 0;
-        for (Long result : results) {
-            sum += result;
-        }
-        return sum / results.length;
-    }
-
-    /**
-     * Calculate the standard deviation given a Long array of results
-     *
-     * @param results The Long array of results
-     * @param mean
-     * @return the standard deviation
-     */
-    private static double calculateStandardDeviation(Long[] results, double mean) {
-        double sum = 0;
-        for (Long result : results) {
-            sum += Math.pow(result - mean, 2);
-        }
-        return Math.sqrt(sum / results.length);
-    }
-
-    /**
-     * Calculate the first quartile given a Long array of results
-     *
-     * @param results The Long array of results
-     * @return the first quartile
-     */
-    private static double calculateFirstQuartile(Long[] results) {
-        Arrays.sort(results);
-        return results[results.length / 4];
-    }
-
-    /**
-     * Calculate the third quartile given a Long array of results
-     *
-     * @param _results The Long array of results
-     * @return the third quartile
-     */
-    private static double calculateThirdQuartile(Long[] _results) {
-        Long[] results = _results.clone();
-        Arrays.sort(results);
-        return results[results.length * 3 / 4];
-    }
-
 
     private static void printProgramUsage() {
         System.out.println("Java Bubble Sort Experiments\n");
         System.out.println("Usage: java -jar <program name>.jar [-h] [-i <iterations>] [-s <seed>] [-l <string length>]\n");
-        System.out.println("\t-i <iterations>\t\tSets the number of iterations to perform. Default is 1000.");
-        System.out.println("\t-s <seed>\t\t\tSets the seed for the random number generator. Default is random.");
-        System.out.println("\t-l <string length>\tSets the length of the strings to be used. Default is 10.");
-        System.out.println("\t-a <array size>\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 10,100,1000,10000.");
-        System.out.println("\t-n <number of iterations>\tSets the number of iterations take into account to generate statistics. Default is 5.");
-        System.out.println("\t-h\t\t\t\t\tPrints this help message.");
+        System.out.println("\t-i <iterations>\t\t\t\tSets the number of iterations to perform. Default is 1000.");
+        System.out.println("\t-s <seed>\t\t\t\t\tSets the seed for the random number generator. Default is random.");
+        System.out.println("\t-l <string length>\t\t\tSets the length of the strings to be used. Default is 10.");
+        System.out.println("\t-a <array size>\t\t\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 10,100,1000,10000.");
+        System.out.println("\t-n <last number of results>\tSets the number of iterations take into account to generate statistics. Default is 5.");
+        System.out.println("\t-h\t\t\t\t\t\t\tPrints this help message.");
         System.out.println("\nCredits: Created by Erick Garro Elizondo and Cindy Guerrero Toro.");
-        System.out.println("\nWith a hand of GitHub Copilot ;-)");
+        System.out.println("With a hand of GitHub Copilot ;-)");
     }
 }

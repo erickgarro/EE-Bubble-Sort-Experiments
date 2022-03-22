@@ -1,3 +1,11 @@
+/**
+ * Experimentation & Evaluation SP2022
+ * USI - Università della Svizzera italiana
+ * Project: Java Bubble Sort Experiments
+ *
+ * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
+ */
+
 package ch.usi.ee.experiments;
 
 import static ch.usi.ee.data.DataGenerator.*;
@@ -11,6 +19,7 @@ import ch.usi.ee.bubble_sort.Sorter;
 import ch.usi.ee.data.Sorters;
 import ch.usi.ee.enums.DataOrdering;
 import ch.usi.ee.enums.DataType;
+import ch.usi.ee.statistics.Result;
 
 import java.io.IOException;
 import java.util.Random;
@@ -59,8 +68,8 @@ public class Experiments {
                 int size = arraySize.intValue();
                 randomIntegers = generateRandomIntegers(rand, size);
                 randomShorts = generateRandomShorts(rand, size);
-                randomStrings = generateRandomStrings(rand, size, filteredStrings);
                 randomFloats = generateRandomFloats(rand, size);
+                randomStrings = generateRandomStrings(rand, size, filteredStrings);
 
                 for (DataOrdering ordering : dataOrderings) {
                     // Get the data to be sorted according to the type ordering and array size
