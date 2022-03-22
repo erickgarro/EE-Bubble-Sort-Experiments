@@ -2,7 +2,7 @@
  * Experimentation & Evaluation SP2022
  * USI - Università della Svizzera italiana
  * Project: Java Bubble Sort Experiments
- * <p>
+ *
  * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
  */
 
@@ -22,6 +22,7 @@ import static ch.usi.ee.data.StringsProcessor.*;
 import static ch.usi.ee.enums.DataOrdering.*;
 import static ch.usi.ee.enums.DataType.*;
 import static ch.usi.ee.experiments.Experiments.*;
+import static ch.usi.ee.io.CreateCSV.generateCSV;
 import static ch.usi.ee.statistics.StatisticsGenerator.*;
 import static java.lang.System.exit;
 
@@ -172,7 +173,7 @@ public class Main extends DataGenerator {
         for (Algorithm algorithm : Algorithm.values()) {
             System.out.print(algorithm.toString());
 
-            if(algorithm != Algorithm.values()[Algorithm.values().length - 1]) {
+            if (algorithm != Algorithm.values()[Algorithm.values().length - 1]) {
                 System.out.print(", ");
             } else {
                 System.out.println("}");
@@ -207,8 +208,7 @@ public class Main extends DataGenerator {
         // Generate statistics
         Stack<Statistics> statistics = calculateStats(results, arraySizes, lastNumberOfIterations);
         printStatistics(statistics);
-
-        // TODO: 19.03.22 - Implement the results summary printing and saving to a TXT or CSV file
+        generateCSV(statistics, workingDirectory);
     }
 
     private static void printProgramUsage() {

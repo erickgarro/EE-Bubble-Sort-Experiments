@@ -31,4 +31,14 @@ public class FileWriter extends FileReader {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
+
+    /**
+     * Gets the current date and time in format yyyy-MM-dd_HH-mm-ss.
+     *
+     * @return The current date and time as a String.
+     */
+    public static String getDateTime() {
+        java.util.Date date = new java.util.Date();
+        return new java.text.SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(date);
+    }
 }
