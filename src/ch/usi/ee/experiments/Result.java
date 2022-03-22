@@ -51,7 +51,7 @@ public class Result {
     }
 
     // Getters
-    public Algorithm getAlgorith() {
+    public Algorithm getAlgorithm() {
         return algorithm;
     }
 
@@ -104,18 +104,29 @@ public class Result {
     }
 
     /**
-     * Get the average elapsed time of the last n results of the experiment
+     * Get the last n results of the experiment
      *
      * @return Average elapsed time of the last n results of the experiment
      */
-    public double getAverageLastN(int _lastN) {
-        double sum = 0;
-
-        //For loop gets average of last n results from elapsedTime array
-        for (int i = _lastN; i < elapsedTime.length; i++) {
-            sum += elapsedTime[i];
+    public Long[] getLastNResults(int n) throws IllegalArgumentException {
+        if (elapsedTime.length < n) {
+            throw new IllegalArgumentException("There are not enough results");
         }
 
-        return sum / _lastN;
+        Long[] lastNResults = new Long[n];
+
+        for (int i = 0; i < n; i++) {
+            lastNResults[i] = elapsedTime[elapsedTime.length - n + i];
+        }
+
+        return lastNResults;
+    }
+
+    /**
+     * Get the total number of iterations ran for the experiment
+     * @return Total number of iterations
+     */
+    public int getNumberOfIterations() {
+        return iterations;
     }
 }

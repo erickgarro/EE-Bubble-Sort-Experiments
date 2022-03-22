@@ -31,14 +31,14 @@ public class Experiments {
      * return The results of the experiments.
      * @return
      */
-    public static Stack<Object> runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
+    public static Stack<Result>[] runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
         int numberOfAlgorithms = 3;
         String[] filteredStrings = readData(stringsSourceFile);
 
         Stack<Result> BubbleSortPassPerItemResults = new Stack<Result>();
         Stack<Result> BubbleSortUntilNoChangeResults = new Stack<Result>();
         Stack<Result> BubbleSortWhileNeededResults = new Stack<Result>();
-        Stack<Object> allResults = new Stack<>();
+        Stack<Result>[] allResults = new Stack[numberOfAlgorithms];
         Stack<Result> results;
 
         Sorter[] sorters = new Sorter[numberOfAlgorithms];
@@ -149,6 +149,7 @@ public class Experiments {
                             break;
                     }
 
+                    int a = 0;
                     for (Sorter sorter : sorters) {
                         String className = sorter.getClass().getName().split("\\.")[sorter.getClass().getName().split("\\.").length - 1];
                         Result iteration_result = new Result(type, ordering, className, size, totalIterations);
@@ -175,16 +176,13 @@ public class Experiments {
                             iteration_result.addElapsedTime(i, elapsedTime);
                             results.push(iteration_result);
                         }
+                        allResults[a++] = results;
                     }
                 }
             }
         }
 
-        System.out.println("Experiments completed.");
-
-        allResults.push(BubbleSortPassPerItemResults);
-        allResults.push(BubbleSortUntilNoChangeResults);
-        allResults.push(BubbleSortWhileNeededResults);
+        System.out.println("Experiments finished.");
 
         return allResults;
     }

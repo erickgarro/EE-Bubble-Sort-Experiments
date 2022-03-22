@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.*;
 
 import ch.usi.ee.data.DataGenerator;
+import ch.usi.ee.enums.Algorithm;
 import ch.usi.ee.enums.DataOrdering;
 import ch.usi.ee.enums.DataType;
-import ch.usi.ee.io.Serializer;
+import ch.usi.ee.experiments.Result;
 
 import static ch.usi.ee.data.StringsProcessor.prepareStrings;
 import static ch.usi.ee.enums.DataOrdering.*;
@@ -172,14 +173,131 @@ public class Main extends DataGenerator {
 
         // Execute the experiments
         String filteredStringsFilePath = path + filteredStringsFile + stringLength + ".txt";
-        Stack<Object> results = runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
-        Serializer.serializeResults(results);
+        Stack<Result>[] results = runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
+//        Serializer.serializeResults(results); //todo: fix serialization
 
         // Generate the statistics
-
-
         // TODO: 19.03.22 - Implement the results summary printing and saving to a TXT or CSV file
+        calculateStatistics(results, arraySizes, lastNumberOfIterations);
     }
+
+    // The function receives an Object Stack with three Result Stacks
+    // it calculates the mean of the results by algorithm, data type, and ordering, for the last n iterations of the experiment
+    private static void calculateStatistics(Stack<Result>[] allResults, Stack<Long> arraySizes, int lastNumberOfIterations) {
+        double standardDeviation = 0.0;
+        double firstQuartile = 0.0;
+        double thirdQuartile = 0.0;
+        double median = 0.0;
+        double mean = 0.0;
+        double firstValue = 0.0;
+        double lastValue = 0.0;
+        Long[] lastNResults = null;
+        Long[] lastNResultsSorted = null;
+        Algorithm algo = null;
+        String algoName = null;
+        DataType dType = null;
+        DataOrdering dOrdering = null;
+        int aSize = 0;
+        int nIterations = 0;
+        int nLastNumberOfIterations = 0;
+
+        for (Stack<Result> algoResults : allResults) {
+            for (Result perAlgorigthmResults : algoResults) {
+
+                for (Long arraySize : arraySizes) {
+                    for (Algorithm algorithm : Algorithm.values()) {
+                        for (DataType dataType : DataType.values()) {
+                            for (DataOrdering dataOrdering : DataOrdering.values()) {
+                                algo = perAlgorigthmResults.getAlgorithm();
+                                algoName = algorithm.toString();
+                                dType = perAlgorigthmResults.getDataType();
+                                dOrdering = perAlgorigthmResults.getDataOrdering();
+                                aSize = perAlgorigthmResults.getArraySize();
+                                nIterations = perAlgorigthmResults.getNumberOfIterations();
+                                nLastNumberOfIterations = lastNumberOfIterations;
+
+                                lastNResults = perAlgorigthmResults.getLastNResults(lastNumberOfIterations);
+                                lastNResultsSorted = lastNResults.clone();
+                                firstValue = perAlgorigthmResults.getFirstResult();
+                                lastValue =perAlgorigthmResults.getLastResult();
+                                mean = calculateMean(lastNResults);
+                                standardDeviation = calculateStandardDeviation(lastNResults, mean);
+                                median = calculateMedian(lastNResultsSorted);
+                                firstQuartile = calculateFirstQuartile(lastNResultsSorted);
+                                thirdQuartile = calculateThirdQuartile(lastNResultsSorted);
+
+                                int k = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculate the median given a Long array of results
+     *
+     * @param results The Long array of results
+     * @return The median of the results
+     */
+    private static double calculateMedian(Long[] results) {
+        Arrays.sort(results);
+        return results[results.length / 2];
+    }
+
+    /**
+     * Calculate the mean given a Long array of results
+     *
+     * @param results The Long array of results
+     * @return The mean of the results
+     */
+    private static double calculateMean(Long[] results) {
+        double sum = 0;
+        for (Long result : results) {
+            sum += result;
+        }
+        return sum / results.length;
+    }
+
+    /**
+     * Calculate the standard deviation given a Long array of results
+     *
+     * @param results The Long array of results
+     * @param mean
+     * @return the standard deviation
+     */
+    private static double calculateStandardDeviation(Long[] results, double mean) {
+        double sum = 0;
+        for (Long result : results) {
+            sum += Math.pow(result - mean, 2);
+        }
+        return Math.sqrt(sum / results.length);
+    }
+
+    /**
+     * Calculate the first quartile given a Long array of results
+     *
+     * @param results The Long array of results
+     * @return the first quartile
+     */
+    private static double calculateFirstQuartile(Long[] results) {
+        Arrays.sort(results);
+        return results[results.length / 4];
+    }
+
+    /**
+     * Calculate the third quartile given a Long array of results
+     *
+     * @param _results The Long array of results
+     * @return the third quartile
+     */
+    private static double calculateThirdQuartile(Long[] _results) {
+        Long[] results = _results.clone();
+        Arrays.sort(results);
+        return results[results.length * 3 / 4];
+    }
+
 
     private static void printProgramUsage() {
         System.out.println("Java Bubble Sort Experiments\n");
