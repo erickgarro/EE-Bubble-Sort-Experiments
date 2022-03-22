@@ -122,16 +122,9 @@ public class Main extends DataGenerator {
             System.out.println("  Array sizes set to default value: ");
         }
 
-        System.out.print("  Array sizes set to: {");
+        System.out.println("  Array sizes set to: ");
         for (Long size : arraySizes) {
-            System.out.print(size);
-
-            if (size != arraySizes.lastElement()) {
-                System.out.print(", ");
-            } else {
-                System.out.println("}");
-            }
-
+            System.out.println("   - " + size);
         }
 
         // If the user has specified a value for the string length, use it
@@ -149,35 +142,19 @@ public class Main extends DataGenerator {
         }
 
         // Print other variable information
-        System.out.print("  Data Types available: {");
+        System.out.println("  Data Types available: ");
         for (int i = 0; i < dataTypes.length; i++) {
-            System.out.print(dataTypes[i].toString());
-            if (i < arraySizes.size()) {
-                System.out.print(", ");
-            } else {
-                System.out.println("}");
-            }
+            System.out.println("   - " + dataTypes[i].toString());
         }
 
-        System.out.print("  Data Orderings available: {");
+        System.out.println("  Data Orderings available: ");
         for (int i = 0; i < dataOrderings.length; i++) {
-            System.out.print(dataOrderings[i]);
-            if (i < arraySizes.size() - 1) {
-                System.out.print(", ");
-            } else {
-                System.out.println("}");
-            }
+            System.out.println("   - " + dataOrderings[i]);
         }
 
-        System.out.print("  Algorithms available to experiment: {");
+        System.out.println("  Algorithms available to experiment: ");
         for (Algorithm algorithm : Algorithm.values()) {
-            System.out.print(algorithm.toString());
-
-            if (algorithm != Algorithm.values()[Algorithm.values().length - 1]) {
-                System.out.print(", ");
-            } else {
-                System.out.println("}");
-            }
+            System.out.println("   - " + algorithm.toString());
         }
 
         // Look for the strings source files
