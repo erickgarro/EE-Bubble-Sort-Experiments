@@ -1,11 +1,3 @@
-/**
- * Experimentation & Evaluation SP2022
- * USI - Università della Svizzera italiana
- * Project: Java Bubble Sort Experiments
- *
- * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
- */
-
 package ch.usi.ee.bubble_sort;
 
 public final class BubbleSortWhileNeeded<T extends Comparable<T>> implements Sorter<T> {
