@@ -6,6 +6,7 @@ import java.util.*;
 import ch.usi.ee.data.DataGenerator;
 import ch.usi.ee.enums.DataOrdering;
 import ch.usi.ee.enums.DataType;
+import ch.usi.ee.io.Serializer;
 
 import static ch.usi.ee.data.StringsProcessor.prepareStrings;
 import static ch.usi.ee.enums.DataOrdering.*;
@@ -26,6 +27,7 @@ public class Main extends DataGenerator {
         Stack<Long> arraySizes = new Stack<>();
         int totalIterations = 1000;
         int stringLength = 10;
+        int lastNumberOfIterations = 5;
         Long seed;
         Random rand = new Random();
 
@@ -46,12 +48,22 @@ public class Main extends DataGenerator {
                 if (arg.startsWith("-")) {
                     if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
                         try {
-                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a")) {
+                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a") || arg.equals("-n")) {
                                 Stack<Long> argValues = new Stack<>();
+                                if (arg.equals("-n") && Long.parseLong(args[i + 1]) < 5) {
+                                    System.out.println("The number of number of iterations to generate statistics must be greater than 5");
+                                    exit(1);
+                                }
                                 if (arg.equals("-a")) {
                                     String[] arraySizesValues = args[i + 1].split(",");
                                     for (String value : arraySizesValues) {
-                                        argValues.push(Long.parseLong(value));
+                                        Long parsedValue = Long.parseLong(value);
+                                        if (parsedValue >= 5) {
+                                            argValues.push(parsedValue);
+                                        } else {
+                                            System.out.println("Array size must be at least 5");
+                                            exit(1);
+                                        }
                                     }
                                 } else {
                                     argValues.push(Long.parseLong(args[i + 1]));
@@ -107,6 +119,12 @@ public class Main extends DataGenerator {
             System.out.println("  String length set to default value: " + stringLength);
         }
 
+        // If the user has specified a value for the number of iterations to generate the statistics, use it
+        if (arguments.containsKey("-n")) {
+            lastNumberOfIterations = Integer.parseInt(arguments.get("-n").get(0).toString());
+            System.out.println("  Number of iterations to generate statistics set to: " + lastNumberOfIterations);
+        }
+
         // Print other variable information
         System.out.print("  Data Types available: {");
         for (int i = 0; i < dataTypes.length; i++) {
@@ -152,11 +170,15 @@ public class Main extends DataGenerator {
             }
         }
 
+        // Execute the experiments
         String filteredStringsFilePath = path + filteredStringsFile + stringLength + ".txt";
-        runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
+        Stack<Object> results = runExperiments(rand, arraySizes, totalIterations, dataTypes, dataOrderings, filteredStringsFilePath);
+        Serializer.serializeResults(results);
+
+        // Generate the statistics
+
 
         // TODO: 19.03.22 - Implement the results summary printing and saving to a TXT or CSV file
-
     }
 
     private static void printProgramUsage() {
@@ -166,9 +188,9 @@ public class Main extends DataGenerator {
         System.out.println("\t-s <seed>\t\t\tSets the seed for the random number generator. Default is random.");
         System.out.println("\t-l <string length>\tSets the length of the strings to be used. Default is 10.");
         System.out.println("\t-a <array size>\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 10,100,1000,10000.");
+        System.out.println("\t-n <number of iterations>\tSets the number of iterations take into account to generate statistics. Default is 5.");
         System.out.println("\t-h\t\t\t\t\tPrints this help message.");
         System.out.println("\nCredits: Created by Erick Garro Elizondo and Cindy Guerrero Toro.");
         System.out.println("\nWith a hand of GitHub Copilot ;-)");
     }
 }
-

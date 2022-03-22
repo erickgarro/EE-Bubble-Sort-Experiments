@@ -1,6 +1,7 @@
 package ch.usi.ee.experiments;
 
 import static ch.usi.ee.data.DataGenerator.*;
+import static ch.usi.ee.enums.Algorithm.*;
 import static java.lang.System.exit;
 
 import ch.usi.ee.bubble_sort.BubbleSortPassPerItem;
@@ -18,7 +19,7 @@ import java.util.Stack;
 
 public class Experiments {
     /**
-     * This function executes the experiments.
+     * This function executes the experiments and returns the results.
      *
      * @param rand              The random number generator.
      * @param arraySizes        The array sizes to be tested.
@@ -27,14 +28,17 @@ public class Experiments {
      * @param dataOrderings     The data orderings to be tested.
      * @param stringsSourceFile The source file for the strings to be selected randomly.
      * @throws IOException
+     * return The results of the experiments.
+     * @return
      */
-    public static void runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
+    public static Stack<Object> runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
         int numberOfAlgorithms = 3;
         String[] filteredStrings = readData(stringsSourceFile);
 
         Stack<Result> BubbleSortPassPerItemResults = new Stack<Result>();
         Stack<Result> BubbleSortUntilNoChangeResults = new Stack<Result>();
         Stack<Result> BubbleSortWhileNeededResults = new Stack<Result>();
+        Stack<Object> allResults = new Stack<>();
         Stack<Result> results;
 
         Sorter[] sorters = new Sorter[numberOfAlgorithms];
@@ -146,14 +150,18 @@ public class Experiments {
                     }
 
                     for (Sorter sorter : sorters) {
-                        Result iteration_result = new Result(type, ordering, sorter.getClass().getName(), size, totalIterations);
+                        String className = sorter.getClass().getName().split("\\.")[sorter.getClass().getName().split("\\.").length - 1];
+                        Result iteration_result = new Result(type, ordering, className, size, totalIterations);
                         System.gc(); // Force garbage collection
 
                         if (sorter instanceof BubbleSortPassPerItem) {
+                            iteration_result.setAlgorithm(BUBBLE_SORT_PASS_PER_ITEM);
                             results = BubbleSortPassPerItemResults;
                         } else if (sorter instanceof BubbleSortUntilNoChange) {
+                            iteration_result.setAlgorithm(BUBBLE_SORT_UNTIL_NO_CHANGE);
                             results = BubbleSortUntilNoChangeResults;
                         } else {
+                            iteration_result.setAlgorithm(BUBBLE_SORT_WHILE_NEEDED);
                             results = BubbleSortWhileNeededResults;
                         }
 
@@ -167,12 +175,17 @@ public class Experiments {
                             iteration_result.addElapsedTime(i, elapsedTime);
                             results.push(iteration_result);
                         }
-
-                        results.push(iteration_result);
                     }
                 }
             }
         }
+
         System.out.println("Experiments completed.");
+
+        allResults.push(BubbleSortPassPerItemResults);
+        allResults.push(BubbleSortUntilNoChangeResults);
+        allResults.push(BubbleSortWhileNeededResults);
+
+        return allResults;
     }
 }

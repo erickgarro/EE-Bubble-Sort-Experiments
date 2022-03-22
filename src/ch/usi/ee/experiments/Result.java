@@ -4,7 +4,8 @@ import ch.usi.ee.enums.*;
 
 
 public class Result {
-    private String algorithm;
+    private String algorithmName;
+    private Algorithm algorithm;
     private DataType dataType;
     private DataOrdering dataOrdering;
     private int arraySize;
@@ -14,15 +15,15 @@ public class Result {
     public Result(DataType _type, DataOrdering _ordering, String _algorithmName, int _arraySize, int _totalIterations) {
         this.dataType = _type;
         this.dataOrdering = _ordering;
-        this.algorithm = _algorithmName;
+        this.algorithmName = _algorithmName;
         this.arraySize = _arraySize;
         this.iterations = _totalIterations;
         this.elapsedTime = new long[_totalIterations];
     }
 
     // Setters
-    public void setAlgorithm(String _algorithm) {
-        algorithm = _algorithm;
+    public void setAlgorithmName(String _algorithm) {
+        algorithmName = _algorithm;
     }
 
     public void setDataType(DataType _dataType) {
@@ -41,13 +42,21 @@ public class Result {
         iterations = _iterations;
     }
 
+    public void setAlgorithm(Algorithm _algorithm){
+        algorithm = _algorithm;
+    }
+
     public void addElapsedTime(int index, long _elapsedTime) {
         elapsedTime[index] = _elapsedTime;
     }
 
     // Getters
-    public String getAlgorithm() {
+    public Algorithm getAlgorith() {
         return algorithm;
+    }
+
+    public String getAlgorithmName() {
+        return algorithmName;
     }
 
     public DataType getDataType() {
