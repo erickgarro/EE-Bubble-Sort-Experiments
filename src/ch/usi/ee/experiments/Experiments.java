@@ -54,8 +54,6 @@ public class Experiments {
         Comparable[] randomStrings = null, sortedStrings = null, reversedStrings = null;
         Comparable[] toSort = null;
 
-        System.gc(); // Force garbage collection
-
         for (DataType type : dataTypes) {
             for (Long arraySize : arraySizes) {
                 int size = arraySize.intValue();
@@ -149,11 +147,10 @@ public class Experiments {
                             break;
                     }
 
-                    int a = 0;
+                    int allResultsArrayIndex = 0;
                     for (Sorter sorter : sorters) {
                         String className = sorter.getClass().getName().split("\\.")[sorter.getClass().getName().split("\\.").length - 1];
                         Result iteration_result = new Result(type, ordering, className, size, totalIterations);
-                        System.gc(); // Force garbage collection
 
                         if (sorter instanceof BubbleSortPassPerItem) {
                             iteration_result.setAlgorithm(BUBBLE_SORT_PASS_PER_ITEM);
@@ -166,24 +163,24 @@ public class Experiments {
                             results = BubbleSortWhileNeededResults;
                         }
 
+                        System.gc(); // Force garbage collection
+
                         // Run the sorting algorithms
                         for (int i = 0; i < totalIterations; i++) {
                             long startTime = System.nanoTime();
-                            sorter.sort(toSort);
+                            sorter.sort(toSort.clone());
                             long endTime = System.nanoTime();
                             long elapsedTime = endTime - startTime;
-
                             iteration_result.addElapsedTime(i, elapsedTime);
-                            results.push(iteration_result);
                         }
-                        allResults[a++] = results;
+                        results.push(iteration_result);
+                        allResults[allResultsArrayIndex++] = results;
                     }
                 }
             }
         }
 
         System.out.println("Experiments finished.");
-
         return allResults;
     }
 }
