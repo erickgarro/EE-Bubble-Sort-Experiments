@@ -38,7 +38,7 @@ public class Main extends DataGenerator {
         DataOrdering[] dataOrderings = {ASC, RANDOM, DESC};
         Stack<Long> arraySizes = new Stack<>();
         int totalIterations = 1000;
-        int stringLength = 10;
+        int stringLength = 5;
         int lastNumberOfIterations = 30;
         Long seed;
         Random rand = new Random();
@@ -122,7 +122,6 @@ public class Main extends DataGenerator {
             arraySizes.push(100L);
             arraySizes.push(1000L);
             arraySizes.push(10000L);
-            arraySizes.push(100000L);
             System.out.println("  Array sizes set to default value: ");
         }
 
@@ -134,6 +133,10 @@ public class Main extends DataGenerator {
         // If the user has specified a value for the string length, use it
         if (arguments.containsKey("-l")) {
             stringLength = Integer.parseInt(arguments.get("-l").get(0).toString());
+            if(stringLength < 1) {
+                System.out.println("String length must be greater than 1");
+                exit(1);
+            }
             System.out.println("  String length set to: " + stringLength);
         } else {
             System.out.println("  String length set to default value: " + stringLength);
@@ -202,8 +205,8 @@ public class Main extends DataGenerator {
         System.out.println("Usage: java -jar <program name>.jar [-h] [-i <iterations>] [-s <seed>] [-l <string length>] [-a <array sizes>] [-n <last number of results>] [-r]");
         System.out.println("\t-i <iterations>\t\t\t\tSets the number of iterations to perform. Default is 1000.");
         System.out.println("\t-s <seed>\t\t\t\t\tSets the seed for the random number generator. Default is random.");
-        System.out.println("\t-l <string length>\t\t\tSets the length of the strings to be used. Default is 10.");
-        System.out.println("\t-a <array size>\t\t\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 100,1000,10000,100000.");
+        System.out.println("\t-l <string length>\t\t\tSets the length of the strings to be used. Default is 5.");
+        System.out.println("\t-a <array size>\t\t\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 100,1000,10000.");
         System.out.println("\t-n <last number of results>\tSets the last n results to generate statistics. Default is 30.");
         System.out.println("\t-r\t\t\t\t\t\t\tPrints all the experiment results in the console.");
         System.out.println("\t-h\t\t\t\t\t\t\tPrints this help message.");

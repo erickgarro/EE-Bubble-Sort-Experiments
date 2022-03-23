@@ -30,6 +30,10 @@ public class CreateCSV {
         String csvLine = "";
         Stack<String> csvData = new Stack<>();
 
+        for(int i = 0; i < statistics.get(0).getLastNResults().length; i++) {
+            csvHeader += ",v_" + (i);
+        }
+
         csvData.push(csvHeader + "\n");
 
         try {
@@ -39,6 +43,11 @@ public class CreateCSV {
                         stat.getMean() + "," + stat.getMinResult() + "," + stat.getMaxResult() + "," +
                         stat.getMedian() + "," + stat.getLastNumberOfIterations() + "," + stat.getFirstQuartile() + "," +
                         stat.getThirdQuartile() + "," + stat.getInterQuartileRange() + "," + stat.getFirstResult() + "," + stat.getLastResult();
+
+                for (Long result : stat.getLastNResults()) {
+                    csvLine += "," + result;
+                }
+
                 csvData.push(csvLine);
             }
         } catch (Exception e) {

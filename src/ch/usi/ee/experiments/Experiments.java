@@ -36,8 +36,8 @@ public class Experiments {
      * @param dataTypes         The data types to be tested.
      * @param dataOrderings     The data orderings to be tested.
      * @param stringsSourceFile The source file for the strings to be selected randomly.
-     * @throws IOException If the source file is not found.
      * @return The results of the experiments.
+     * @throws IOException If the source file is not found.
      */
     public static Stack<Result>[] runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
         int numberOfAlgorithms = 3;
@@ -54,7 +54,7 @@ public class Experiments {
         sorters[1] = new BubbleSortUntilNoChange();
         sorters[2] = new BubbleSortWhileNeeded();
 
-        System.out.println("\nRunning experiments...\n");
+        System.out.println("\nRunning experiments...");
 
         Comparable[] randomIntegers = null, sortedIntegers = null, reversedIntegers = null;
         Comparable[] randomShorts = null, sortedShorts = null, reversedShorts = null;
@@ -69,6 +69,8 @@ public class Experiments {
                 randomShorts = generateRandomShorts(rand, size);
                 randomFloats = generateRandomFloats(rand, size);
                 randomStrings = generateRandomStrings(rand, size, filteredStrings);
+
+                System.out.println("\nArray size: "+ size );
 
                 for (DataOrdering ordering : dataOrderings) {
                     // Get the data to be sorted according to the type ordering and array size
@@ -171,6 +173,7 @@ public class Experiments {
                             results = BubbleSortWhileNeededResults;
                         }
 
+                        System.out.print(iteration_result.getAlgorithm() + " | " + iteration_result.getDataType() + " | " + iteration_result.getDataOrdering() + "... ");
                         forceGarbageCollection();
 
                         // Run the sorting algorithms
@@ -181,6 +184,8 @@ public class Experiments {
                             long elapsedTime = endTime - startTime;
                             iteration_result.addElapsedTime(i, elapsedTime);
                         }
+
+                        System.out.println("\t\t\tDone!");
                         results.push(iteration_result);
                         allResults[allResultsArrayIndex++] = results;
                     }

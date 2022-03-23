@@ -21,7 +21,15 @@ public class FileWriter extends FileReader {
      */
     public static void writeData(Stack<String> data, String filename) throws IOException {
         java.io.FileWriter writer = new java.io.FileWriter(filename, false);
+        String[] fullpath = filename.split("/");
+        String folder = fullpath[fullpath.length - 2];
 
+        // Check if folder exists in workingDir
+        String workingDir = System.getProperty("user.dir");
+        if (!workingDir.contains(folder)) {
+            new java.io.File(workingDir + "/" + folder).mkdir();
+        }
+        
         try {
             for (String s : data) {
                 writer.write(s + "\n");
