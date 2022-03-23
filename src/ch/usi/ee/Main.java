@@ -63,7 +63,7 @@ public class Main extends DataGenerator {
 
                     if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
                         try {
-                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a") || arg.equals("-n") || arg.equals("-r")) {
+                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a") || arg.equals("-n")) {
                                 Stack<Long> argValues = new Stack<>();
                                 if (arg.equals("-n") && Long.parseLong(args[i + 1]) < 5) {
                                     System.out.println("The number of number of iterations to generate statistics must be greater than 5");
