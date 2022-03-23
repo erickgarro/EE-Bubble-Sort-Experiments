@@ -13,6 +13,7 @@ public class Statistics {
     private double standardError;
     private double firstQuartile;
     private double thirdQuartile;
+    private double interQuartileRange;
     private double median;
     private double mean;
     private double firstResult;
@@ -104,6 +105,10 @@ public class Statistics {
         this.standardError = standardError;
     }
 
+    public void setInterQuartileRange(double interQuartileRange) {
+        this.interQuartileRange = interQuartileRange;
+    }
+
     //Getters
     public String getAlgorithm() {
         return this.algorithm;
@@ -175,5 +180,9 @@ public class Statistics {
 
     public Long getMaxResult() {
         return this.maxResult;
+    }
+
+    public double getInterQuartileRange() {
+        return this.interQuartileRange;
     }
 }

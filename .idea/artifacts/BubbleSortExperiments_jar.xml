@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BubbleSortExperiments:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BubbleSortExperiments_jar</output-path>
+    <root id="archive" name="BubbleSortExperiments.jar">
+      <element id="module-output" name="BubbleSortExperiments" />
+    </root>
+  </artifact>
+</component>

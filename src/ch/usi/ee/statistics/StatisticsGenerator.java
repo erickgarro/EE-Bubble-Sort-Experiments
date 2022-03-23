@@ -46,6 +46,7 @@ public class StatisticsGenerator {
                 stats.setMinResult(perAlgoResults.getMinResult());
                 stats.setMaxResult(perAlgoResults.getMaxResult());
                 stats.setStandardError(calculateStandardError(lastNResultsSorted, stats.getMean()));
+                stats.setInterQuartileRange(stats.getThirdQuartile() - stats.getFirstQuartile());
 
                 statistics.push(stats);
             }
@@ -128,6 +129,18 @@ public class StatisticsGenerator {
     }
 
     /**
+     * Calculate interquartile range given a Long array of results
+     *
+     * @param _results The Long array of results
+     * @return the interquartile range
+     */
+    static double calculateInterquartileRange(Long[] _results) {
+        Long[] results = _results.clone();
+        Arrays.sort(results);
+        return calculateThirdQuartile(results) - calculateFirstQuartile(results);
+    }
+
+    /**
      *  This function prints the statistics for each result
      *  @param statistics The statistics to print
      */
@@ -140,6 +153,7 @@ public class StatisticsGenerator {
             System.out.println("  Data Ordering: " + statistics.get(i).getDataOrdering());
             System.out.println("  Array size: " + statistics.get(i).getArraySize());
             System.out.println("  Standard deviation [ns]: " + statistics.get(i).getStandardDeviation());
+            System.out.println("  Standard error [ns]: " + statistics.get(i).getStandardError());
             System.out.println("  Mean [ns]: " + statistics.get(i).getMean());
             System.out.println("  Minimum time [ns]: " + statistics.get(i).getMinResult());
             System.out.println("  Maximum time [ns]: " + statistics.get(i).getMaxResult());
@@ -147,6 +161,7 @@ public class StatisticsGenerator {
             System.out.println("  Number of iterations: " + statistics.get(i).getIterations());
             System.out.println("  First quartile [ns]: " + statistics.get(i).getFirstQuartile());
             System.out.println("  Third quartile [ns]: " + statistics.get(i).getThirdQuartile());
+            System.out.println("  Interquartile range [ns]: " + statistics.get(i).getInterQuartileRange());
             System.out.println("  First result [ns]: " + statistics.get(i).getFirstResult());
             System.out.println("  Last result [ns]: " + statistics.get(i).getLastResult() + "\n");
         }

@@ -2,7 +2,7 @@
  * Experimentation & Evaluation SP2022
  * USI - Università della Svizzera italiana
  * Project: Java Bubble Sort Experiments
- *
+ * <p>
  * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
  */
 
@@ -171,13 +171,7 @@ public class Experiments {
                             results = BubbleSortWhileNeededResults;
                         }
 
-                        // Force garbage collection
-                        System.gc();
-                        System.gc();
-                        System.gc();
-                        System.gc();
-                        System.gc();
-                        System.gc();
+                        forceGarbageCollection();
 
                         // Run the sorting algorithms
                         for (int i = 0; i < totalIterations; i++) {
@@ -195,5 +189,14 @@ public class Experiments {
         }
 
         return allResults;
+    }
+
+    /**
+     * Runs garbage collection to free up memory
+     */
+    private static void forceGarbageCollection() {
+        for (int i = 0; i < 6; i++) {
+            System.gc();
+        }
     }
 }

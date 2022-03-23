@@ -39,7 +39,7 @@ public class Main extends DataGenerator {
         Stack<Long> arraySizes = new Stack<>();
         int totalIterations = 1000;
         int stringLength = 10;
-        int lastNumberOfIterations = 5;
+        int lastNumberOfIterations = 30;
         Long seed;
         Random rand = new Random();
         boolean printReports = false;
@@ -65,8 +65,8 @@ public class Main extends DataGenerator {
                         try {
                             if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a") || arg.equals("-n")) {
                                 Stack<Long> argValues = new Stack<>();
-                                if (arg.equals("-n") && Long.parseLong(args[i + 1]) < 5) {
-                                    System.out.println("The number of number of iterations to generate statistics must be greater than 5");
+                                if (arg.equals("-n") && Long.parseLong(args[i + 1]) < 30) {
+                                    System.out.println("The number of number of iterations to generate statistics must be greater than 30");
                                     exit(1);
                                 }
 
@@ -74,10 +74,10 @@ public class Main extends DataGenerator {
                                     String[] arraySizesValues = args[i + 1].split(",");
                                     for (String value : arraySizesValues) {
                                         Long parsedValue = Long.parseLong(value);
-                                        if (parsedValue >= 5) {
+                                        if (parsedValue >= 10) {
                                             argValues.push(parsedValue);
                                         } else {
-                                            System.out.println("Array size must be at least 5");
+                                            System.out.println("Array size must be at least 10");
                                             exit(1);
                                         }
                                     }
@@ -119,10 +119,10 @@ public class Main extends DataGenerator {
         if (arguments.containsKey("-a")) {
             arraySizes = arguments.get("-a");
         } else {
-            arraySizes.push(10L);
             arraySizes.push(100L);
             arraySizes.push(1000L);
             arraySizes.push(10000L);
+            arraySizes.push(100000L);
             System.out.println("  Array sizes set to default value: ");
         }
 
@@ -203,8 +203,8 @@ public class Main extends DataGenerator {
         System.out.println("\t-i <iterations>\t\t\t\tSets the number of iterations to perform. Default is 1000.");
         System.out.println("\t-s <seed>\t\t\t\t\tSets the seed for the random number generator. Default is random.");
         System.out.println("\t-l <string length>\t\t\tSets the length of the strings to be used. Default is 10.");
-        System.out.println("\t-a <array size>\t\t\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 10,100,1000,10000.");
-        System.out.println("\t-n <last number of results>\tSets the last n results to generate statistics. Default is 5.");
+        System.out.println("\t-a <array size>\t\t\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 100,1000,10000,100000.");
+        System.out.println("\t-n <last number of results>\tSets the last n results to generate statistics. Default is 30.");
         System.out.println("\t-r\t\t\t\t\t\t\tPrints all the experiment results in the console.");
         System.out.println("\t-h\t\t\t\t\t\t\tPrints this help message.");
         System.out.println("\nIMPORTANT: The program requires a file named \"allstrings.txt\" with a list of strings of multiple length, that will be filtered\n" +

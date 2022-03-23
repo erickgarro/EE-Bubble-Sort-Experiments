@@ -26,7 +26,7 @@ public class CreateCSV {
     public static void generateCSV(Stack<Statistics> statistics, String workingDirectory) throws IOException {
         String csvFile = getDateTime() + "_results.csv";
         String csvPath = workingDirectory + "/results/" + csvFile;
-        String csvHeader = "Algorithm,Data Type,Data Ordering,Array size,Standard deviation,Mean,Minimum time,Maximum time,Median,Number of iterations,First quartile,Third quartile,First result,Last result";
+        String csvHeader = "Algorithm,Data Type,Data Ordering,Array size,Standard deviation,Standard error,Mean,Minimum time,Maximum time,Median,Number of iterations,First quartile,Third quartile,Interquartile range,First result,Last result";
         String csvLine = "";
         Stack<String> csvData = new Stack<>();
 
@@ -35,10 +35,10 @@ public class CreateCSV {
         try {
             for (Statistics stat : statistics) {
                 csvLine = stat.getAlgorithm() + "," + stat.getDataType() + "," +
-                        stat.getDataOrdering() + "," + stat.getArraySize() + "," + stat.getStandardDeviation() + "," +
+                        stat.getDataOrdering() + "," + stat.getArraySize() + "," + stat.getStandardDeviation() + "," + stat.getStandardError()+ "," +
                         stat.getMean() + "," + stat.getMinResult() + "," + stat.getMaxResult() + "," +
                         stat.getMedian() + "," + stat.getLastNumberOfIterations() + "," + stat.getFirstQuartile() + "," +
-                        stat.getThirdQuartile() + "," + stat.getFirstResult() + "," + stat.getLastResult();
+                        stat.getThirdQuartile() + "," + stat.getInterQuartileRange() + "," + stat.getFirstResult() + "," + stat.getLastResult();
                 csvData.push(csvLine);
             }
         } catch (Exception e) {
