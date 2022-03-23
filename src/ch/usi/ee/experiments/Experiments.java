@@ -36,9 +36,8 @@ public class Experiments {
      * @param dataTypes         The data types to be tested.
      * @param dataOrderings     The data orderings to be tested.
      * @param stringsSourceFile The source file for the strings to be selected randomly.
-     * @throws IOException
-     * return The results of the experiments.
-     * @return
+     * @throws IOException If the source file is not found.
+     * @return The results of the experiments.
      */
     public static Stack<Result>[] runExperiments(Random rand, Stack<Long> arraySizes, int totalIterations, DataType[] dataTypes, DataOrdering[] dataOrderings, String stringsSourceFile) throws IOException {
         int numberOfAlgorithms = 3;
@@ -172,7 +171,13 @@ public class Experiments {
                             results = BubbleSortWhileNeededResults;
                         }
 
-                        System.gc(); // Force garbage collection
+                        // Force garbage collection
+                        System.gc();
+                        System.gc();
+                        System.gc();
+                        System.gc();
+                        System.gc();
+                        System.gc();
 
                         // Run the sorting algorithms
                         for (int i = 0; i < totalIterations; i++) {

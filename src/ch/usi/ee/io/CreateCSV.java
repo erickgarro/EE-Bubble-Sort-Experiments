@@ -39,7 +39,7 @@ public class CreateCSV {
                         stat.getMean() + "," + stat.getMinResult() + "," + stat.getMaxResult() + "," +
                         stat.getMedian() + "," + stat.getLastNumberOfIterations() + "," + stat.getFirstQuartile() + "," +
                         stat.getThirdQuartile() + "," + stat.getFirstResult() + "," + stat.getLastResult();
-                csvData.push(csvLine + "\n");
+                csvData.push(csvLine);
             }
         } catch (Exception e) {
             System.out.println("Error while generating CSV file.");
