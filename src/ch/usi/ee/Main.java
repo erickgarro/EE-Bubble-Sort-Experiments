@@ -196,7 +196,7 @@ public class Main extends DataGenerator {
             printStatistics(statistics);
         }
 
-        System.out.println("Experiments finished.");
+        System.out.println("\nExperiments finished.");
         generateCSV(statistics, workingDirectory);
     }
 
