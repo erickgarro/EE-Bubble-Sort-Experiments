@@ -26,7 +26,7 @@ public class CreateCSV {
     public static void generateCSV(Stack<Statistics> statistics, String workingDirectory) throws IOException {
         String csvFile = getDateTime() + "_results.csv";
         String csvPath = workingDirectory + "/results/" + csvFile;
-        String csvHeader = "Algorithm,Data Type,Data Ordering,Array size,Standard deviation,Standard error,Mean,Minimum time,Maximum time,Median,Number of iterations,First quartile,Third quartile,Interquartile range,First result,Last result";
+        String csvHeader = "Algorithm,Data Type,Data Ordering,Array size,Standard deviation,Standard error,Mean,Minimum time,Maximum time,Median,N last iterations,First quartile,Third quartile,Interquartile range,First result,Last result";
         String csvLine = "";
         Stack<String> csvData = new Stack<>();
 
