@@ -42,30 +42,34 @@ public class Main extends DataGenerator {
         int lastNumberOfIterations = 5;
         Long seed;
         Random rand = new Random();
-
-        System.out.println("Java Bubble Sort Experiments");
-        System.out.println("by Erick Garro Elizondo and Cindy Guerrero Toro.\n");
-
+        boolean printReports = false;
 
         // Parse arguments
         if (args.length == 1 && args[0].equals("-h")) {
             printProgramUsage();
             exit(0);
         } else if (args.length > 0) {
+            System.out.println("Java Bubble Sort Experiments");
+            System.out.println("by Erick Garro Elizondo and Cindy Guerrero Toro.\n");
             System.out.println("Checking for arguments and setting variables...\n");
 
             // Grab all the command line arguments and put them in a map
             for (int i = 0; i < args.length; i++) {
                 String arg = args[i];
                 if (arg.startsWith("-")) {
+                    if (arg.equals("-r")) {
+                        printReports = true;
+                    }
+
                     if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
                         try {
-                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a") || arg.equals("-n")) {
+                            if (arg.equals("-i") || arg.equals("-s") || arg.equals("-l") || arg.equals("-a") || arg.equals("-n") || arg.equals("-r")) {
                                 Stack<Long> argValues = new Stack<>();
                                 if (arg.equals("-n") && Long.parseLong(args[i + 1]) < 5) {
                                     System.out.println("The number of number of iterations to generate statistics must be greater than 5");
                                     exit(1);
                                 }
+
                                 if (arg.equals("-a")) {
                                     String[] arraySizesValues = args[i + 1].split(",");
                                     for (String value : arraySizesValues) {
@@ -184,19 +188,27 @@ public class Main extends DataGenerator {
 
         // Generate statistics
         Stack<Statistics> statistics = calculateStats(results, arraySizes, lastNumberOfIterations);
-        printStatistics(statistics);
+
+        if (printReports) {
+            printStatistics(statistics);
+        }
+
+        System.out.println("Experiments finished.");
         generateCSV(statistics, workingDirectory);
     }
 
     private static void printProgramUsage() {
         System.out.println("Java Bubble Sort Experiments\n");
-        System.out.println("Usage: java -jar <program name>.jar [-h] [-i <iterations>] [-s <seed>] [-l <string length>]\n");
+        System.out.println("Usage: java -jar <program name>.jar [-h] [-i <iterations>] [-s <seed>] [-l <string length>] [-a <array sizes>] [-n <last number of results>] [-r]");
         System.out.println("\t-i <iterations>\t\t\t\tSets the number of iterations to perform. Default is 1000.");
         System.out.println("\t-s <seed>\t\t\t\t\tSets the seed for the random number generator. Default is random.");
         System.out.println("\t-l <string length>\t\t\tSets the length of the strings to be used. Default is 10.");
         System.out.println("\t-a <array size>\t\t\t\tSets the size of the array to be used, separated by commas and no spaces. Default is 10,100,1000,10000.");
-        System.out.println("\t-n <last number of results>\tSets the number of iterations take into account to generate statistics. Default is 5.");
+        System.out.println("\t-n <last number of results>\tSets the last n results to generate statistics. Default is 5.");
+        System.out.println("\t-r\t\t\t\t\t\t\tPrints all the experiment results in the console.");
         System.out.println("\t-h\t\t\t\t\t\t\tPrints this help message.");
+        System.out.println("\nIMPORTANT: The program requires a file named \"allstrings.txt\" with a list of strings of multiple length, that will be filtered\n" +
+                "           and used for the experiments. It should be located in the data folder \"data\\\" and should contain one string per line.");
         System.out.println("\nCredits: Created by Erick Garro Elizondo and Cindy Guerrero Toro.");
         System.out.println("With a hand of GitHub Copilot ;-)");
     }

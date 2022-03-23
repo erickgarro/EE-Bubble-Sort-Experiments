@@ -55,7 +55,7 @@ public class Experiments {
         sorters[1] = new BubbleSortUntilNoChange();
         sorters[2] = new BubbleSortWhileNeeded();
 
-        System.out.println("Running experiments...\n");
+        System.out.println("\nRunning experiments...\n");
 
         Comparable[] randomIntegers = null, sortedIntegers = null, reversedIntegers = null;
         Comparable[] randomShorts = null, sortedShorts = null, reversedShorts = null;
@@ -189,7 +189,6 @@ public class Experiments {
             }
         }
 
-        System.out.println("Experiments finished.");
         return allResults;
     }
 }
