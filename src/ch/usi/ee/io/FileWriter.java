@@ -2,7 +2,7 @@
  * Experimentation & Evaluation SP2022
  * USI - Università della Svizzera italiana
  * Project: Java Bubble Sort Experiments
- *
+ * <p>
  * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
  */
 
@@ -20,7 +20,6 @@ public class FileWriter extends FileReader {
      * @throws IOException
      */
     public static void writeData(Stack<String> data, String filename) throws IOException {
-        java.io.FileWriter writer = new java.io.FileWriter(filename, false);
         String[] fullpath = filename.split("/");
         String folder = fullpath[fullpath.length - 2];
 
@@ -29,7 +28,9 @@ public class FileWriter extends FileReader {
         if (!workingDir.contains(folder)) {
             new java.io.File(workingDir + "/" + folder).mkdir();
         }
-        
+
+        java.io.FileWriter writer = new java.io.FileWriter(filename, false);
+
         try {
             for (String s : data) {
                 writer.write(s + "\n");
