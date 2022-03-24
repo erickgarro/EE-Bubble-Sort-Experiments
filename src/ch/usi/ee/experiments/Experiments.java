@@ -60,6 +60,27 @@ public class Experiments {
         Comparable[] randomShorts = null, sortedShorts = null, reversedShorts = null;
         Comparable[] randomFloats = null, sortedFloats = null, reversedFloats = null;
         Comparable[] randomStrings = null, sortedStrings = null, reversedStrings = null;
+
+        // Guards to avoid an error due to the available filtered strings being less than the max array size
+        long maxArraySize = 0;
+
+        for (int i = 0; i < arraySizes.size(); i++) {
+            if (maxArraySize == 0) {
+                maxArraySize = arraySizes.get(i);
+            } else {
+                if (arraySizes.get(i) > maxArraySize) {
+                    maxArraySize = arraySizes.get(i);
+                }
+            }
+        }
+
+        if (arraySizes.lastElement() > filteredStrings.length) {
+            System.out.println("\nThe filtered strings source file does not have enough strings to fill your largest array size.");
+            System.out.println("There are only " + filteredStrings.length + " strings in the filtered strings source file.");
+            System.out.println("Please, decrease the array sizes of your largest array or try a different string size.");
+            exit(1);
+        }
+
         Comparable[] toSort = null;
 
         for (DataType type : dataTypes) {
