@@ -1,5 +1,5 @@
 
-# The Bubble Algorithm Library: A Performance Evaluation
+# Bubble Sort Algorithm Libraries: A Performance Evaluation
 
 This Java application was created to experiment with three different bubble sort algorithms. A detailed explanation of the experiment's design, implementation, findings, and replicability can be found in the [report](https://github.com/erickgarro/EE-Bubble-Sort-Experiments/blob/main/report/Garro%20and%20Guerrero%20-%20Bubble%20Sort%20-%20Performance%20Evaluation%20Report.pdf).
 
