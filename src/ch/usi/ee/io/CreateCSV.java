@@ -34,7 +34,7 @@ public class CreateCSV {
             csvHeader += ",v_" + (i);
         }
 
-        csvData.push(csvHeader + "\n");
+        csvData.push(csvHeader);
 
         try {
             for (Statistics stat : statistics) {

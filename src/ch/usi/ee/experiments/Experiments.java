@@ -2,7 +2,7 @@
  * Experimentation & Evaluation SP2022
  * USI - Università della Svizzera italiana
  * Project: Java Bubble Sort Experiments
- * <p>
+ * 
  * Authors: Erick Garro Elizondo & Cindy Guerrero Toro
  */
 
